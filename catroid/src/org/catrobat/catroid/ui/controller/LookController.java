@@ -217,7 +217,16 @@ public final class LookController {
 		}
 		// hack for android 4.4
 		if (originalImagePath == null && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-			String id = originalUri.getLastPathSegment().split(":")[1];
+			String id = null;
+			System.out.println("StringBefore:" + originalUri.getLastPathSegment());
+			if (originalUri.getLastPathSegment().contains(":") == true) {
+
+				id = originalUri.getLastPathSegment().split(":")[1];
+			} else {
+				id = originalUri.getLastPathSegment();
+			}
+			System.out.println("StringAfter:" + id);
+
 			final String[] imageColumns = { MediaStore.Images.Media.DATA };
 			final String imageOrderBy = null;
 
@@ -235,6 +244,7 @@ public final class LookController {
 
 		}
 
+		System.out.println("usedFilePath:" + originalImagePath);
 		copyImageToCatroid(originalImagePath, activity, lookDataList, fragment);
 	}
 

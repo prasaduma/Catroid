@@ -221,6 +221,7 @@ public class SetLookBrickTest extends BaseActivityInstrumentationTestCase<MainMe
 	public void selectLook(String newLook, String oldName, String lookImagePath) {
 		solo.clickOnText(oldName);
 		solo.clickOnText(newLook);
+
 		UiTestUtils.clickOnBottomBar(solo, R.id.button_play);
 		solo.sleep(5000);
 		solo.waitForActivity(StageActivity.class.getSimpleName());
