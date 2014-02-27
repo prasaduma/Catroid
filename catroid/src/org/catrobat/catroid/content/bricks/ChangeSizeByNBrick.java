@@ -69,39 +69,6 @@ public class ChangeSizeByNBrick extends BrickBaseType implements FormulaBrick {
 	}
 
 	@Override
-<<<<<<< HEAD
-=======
-	public View getViewWithAlpha(int alphaValue) {
-
-		if (view != null) {
-
-			View layout = view.findViewById(R.id.brick_change_size_by_layout);
-			Drawable background = layout.getBackground();
-			background.setAlpha(alphaValue);
-
-			TextView changeSizeBy = (TextView) view.findViewById(R.id.brick_change_size_by_label);
-			TextView editChangeSize = (TextView) view.findViewById(R.id.brick_change_size_by_edit_text);
-			changeSizeBy.setTextColor(changeSizeBy.getTextColors().withAlpha(alphaValue));
-			editChangeSize.setTextColor(editChangeSize.getTextColors().withAlpha(alphaValue));
-			editChangeSize.getBackground().setAlpha(alphaValue);
-
-			this.alphaValue = (alphaValue);
-
-		}
-
-		return view;
-	}
-
-	@Override
-	public void onClick(View view) {
-		if (checkbox.getVisibility() == View.VISIBLE) {
-			return;
-		}
-		FormulaEditorFragment.showFragment(view, this, size);
-	}
-
-	@Override
->>>>>>> master
 	public List<SequenceAction> addActionToSequence(SequenceAction sequence) {
 		sequence.addAction(ExtendedActions.changeSizeByN(sprite, size));
 		return null;

@@ -23,28 +23,20 @@
 package org.catrobat.catroid.stage;
 
 import android.content.Context;
-<<<<<<< HEAD
-import android.graphics.Color;
-=======
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
->>>>>>> master
 import android.os.SystemClock;
 import android.util.Log;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-<<<<<<< HEAD
-=======
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
->>>>>>> master
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -84,8 +76,6 @@ public class StageListener implements ApplicationListener {
 	private boolean firstStart = true;
 	private boolean reloadProject = false;
 
-<<<<<<< HEAD
-=======
 	private static boolean checkIfAutomaticScreenshotShouldBeTaken = true;
 	private boolean makeAutomaticScreenshot = false;
 	private boolean makeScreenshot = false;
@@ -99,7 +89,6 @@ public class StageListener implements ApplicationListener {
 	// would be white
 	private boolean skipFirstFrameForAutomaticScreenshot;
 
->>>>>>> master
 	private Project project;
 
 	private OrthographicCamera camera;
@@ -111,19 +100,11 @@ public class StageListener implements ApplicationListener {
 
 	private float virtualWidth;
 	private float virtualHeight;
-
-<<<<<<< HEAD
 	private int screenWidth;
 	private int screenHeight;
 
-	private enum ScreenModes {
-		STRETCH, MAXIMIZE
-	};
-
 	private ScreenModes screenMode;
-=======
 	private Texture axes;
->>>>>>> master
 
 	private boolean makeTestPixels = false;
 	private byte[] testPixels;
@@ -138,6 +119,9 @@ public class StageListener implements ApplicationListener {
 	public int maximizeViewPortWidth = 0;
 
 	private boolean isLiveWallpaper = false;
+	private float virtualWidthHalf;
+	private float virtualHeightHalf;
+	private byte[] thumbnail;
 
 	public StageListener() {
 
@@ -160,12 +144,9 @@ public class StageListener implements ApplicationListener {
 		virtualWidth = project.getXmlHeader().virtualScreenWidth;
 		virtualHeight = project.getXmlHeader().virtualScreenHeight;
 
-<<<<<<< HEAD
 		screenMode = ScreenModes.STRETCH;
-=======
 		virtualWidthHalf = virtualWidth / 2;
 		virtualHeightHalf = virtualHeight / 2;
->>>>>>> master
 
 		stage = new Stage(virtualWidth, virtualHeight, true);
 		batch = stage.getSpriteBatch();
@@ -175,7 +156,6 @@ public class StageListener implements ApplicationListener {
 
 		sprites = project.getSpriteList();
 
-<<<<<<< HEAD
 		if (!finished) {
 			for (Sprite sprite : sprites) {
 				sprite.resetSprite();
@@ -183,17 +163,14 @@ public class StageListener implements ApplicationListener {
 				stage.addActor(sprite.look);
 				sprite.resume();
 			}
-=======
-		passepartout = new Passepartout(ScreenValues.SCREEN_WIDTH, ScreenValues.SCREEN_HEIGHT, maximizeViewPortWidth,
-				maximizeViewPortHeight, virtualWidth, virtualHeight);
-		stage.addActor(passepartout);
->>>>>>> master
+			passepartout = new Passepartout(ScreenValues.SCREEN_WIDTH, ScreenValues.SCREEN_HEIGHT,
+					maximizeViewPortWidth, maximizeViewPortHeight, virtualWidth, virtualHeight);
+			stage.addActor(passepartout);
 
 			if (sprites.size() > 0) {
 				sprites.get(0).look.setLookData(createWhiteBackgroundLookData());
 			}
 
-<<<<<<< HEAD
 			if (DEBUG) {
 				OrthoCamController camController = new OrthoCamController(camera);
 				InputMultiplexer multiplexer = new InputMultiplexer();
@@ -205,14 +182,12 @@ public class StageListener implements ApplicationListener {
 				Gdx.input.setInputProcessor(stage);
 			}
 		}
-=======
 		axes = new Texture(Gdx.files.internal("stage/red_pixel.bmp"));
 		skipFirstFrameForAutomaticScreenshot = true;
 		if (checkIfAutomaticScreenshotShouldBeTaken) {
 			makeAutomaticScreenshot = project.manualScreenshotExists(SCREENSHOT_MANUAL_FILE_NAME);
 		}
 
->>>>>>> master
 	}
 
 	public void menuResume() {
@@ -285,12 +260,9 @@ public class StageListener implements ApplicationListener {
 	public void finish() {
 		finished = true;
 		SoundManager.getInstance().clear();
-<<<<<<< HEAD
-=======
 		if (thumbnail != null && !makeAutomaticScreenshot) {
 			saveScreenshot(thumbnail, SCREENSHOT_AUTOMATIC_FILE_NAME);
 		}
->>>>>>> master
 	}
 
 	@Override
@@ -323,7 +295,6 @@ public class StageListener implements ApplicationListener {
 			reloadProject = false;
 		}
 
-<<<<<<< HEAD
 		switch (screenMode) {
 			case MAXIMIZE:
 				Gdx.gl.glViewport(maximizeViewPortX, maximizeViewPortY, maximizeViewPortWidth, maximizeViewPortHeight);
@@ -334,8 +305,6 @@ public class StageListener implements ApplicationListener {
 				break;
 		}
 
-=======
->>>>>>> master
 		batch.setProjectionMatrix(camera.combined);
 
 		if (firstStart) {
@@ -415,14 +384,14 @@ public class StageListener implements ApplicationListener {
 		if (!finished) {
 			this.finish();
 		}
-<<<<<<< HEAD
+
 		if (stage != null) {
 			stage.dispose();
-=======
-		stage.dispose();
-		font.dispose();
-		axes.dispose();
-		disposeTextures();
+			stage.dispose();
+			font.dispose();
+			axes.dispose();
+			disposeTextures();
+		}
 	}
 
 	public boolean makeManualScreenshot() {
@@ -446,13 +415,13 @@ public class StageListener implements ApplicationListener {
 		for (int i = 0; i < length; i += 4) {
 			colors[i / 4] = android.graphics.Color.argb(255, screenshot[i + 0] & 0xFF, screenshot[i + 1] & 0xFF,
 					screenshot[i + 2] & 0xFF);
->>>>>>> master
 		}
 		if (font != null) {
 			font.dispose();
 		}
 
 		disposeTextures();
+		return finished;
 	}
 
 	public byte[] getPixels(int x, int y, int width, int height) {

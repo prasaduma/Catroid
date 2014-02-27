@@ -49,47 +49,6 @@ public class PreStageActivity extends Activity {
 	private static TextToSpeech textToSpeech;
 	private static OnUtteranceCompletedListenerContainer onUtteranceCompletedListenerContainer;
 
-<<<<<<< HEAD
-=======
-	private boolean autoConnect = false;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		int requiredResources = getRequiredRessources();
-		requiredResourceCounter = Integer.bitCount(requiredResources);
-
-		setContentView(R.layout.activity_prestage);
-
-		if ((requiredResources & Brick.TEXT_TO_SPEECH) > 0) {
-			Intent checkIntent = new Intent();
-			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-			startActivityForResult(checkIntent, REQUEST_TEXT_TO_SPEECH);
-		}
-		if ((requiredResources & Brick.BLUETOOTH_LEGO_NXT) > 0) {
-			BluetoothManager bluetoothManager = new BluetoothManager(this);
-
-			int bluetoothState = bluetoothManager.activateBluetooth();
-			if (bluetoothState == BluetoothManager.BLUETOOTH_NOT_SUPPORTED) {
-
-				Toast.makeText(PreStageActivity.this, R.string.notification_blueth_err, Toast.LENGTH_LONG).show();
-				resourceFailed();
-			} else if (bluetoothState == BluetoothManager.BLUETOOTH_ALREADY_ON) {
-				if (legoNXT == null) {
-					startBluetoothCommunication(true);
-				} else {
-					resourceInitialized();
-				}
-
-			}
-		}
-		if (requiredResourceCounter == Brick.NO_RESOURCES) {
-			startStage();
-		}
-	}
-
->>>>>>> master
 	@Override
 	public void onResume() {
 		super.onResume();

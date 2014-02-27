@@ -37,9 +37,13 @@
 cd "%~dp0\src\org\catrobat\catroid\bluetooth"
 ATTRIB +h "BtCommunicator.java" /s
 ATTRIB +h "BTConnectable.java" /s
+ATTRIB +h "BluetoothManager.java" /s
+ATTRIB +h "DeviceListActivitiy.java" /s
 call:deleteAllFiles
 ATTRIB -h "BtCommunicator.java" /s
 ATTRIB -h "BTConnectable.java" /s
+ATTRIB -h "BluetoothManager.java" /s
+ATTRIB -h "DeviceListActivitiy.java" /s
 @echo "| bluetooth                                  |    DONE    |"
 @echo "+--------------------------------------------+------------+"
 
@@ -48,15 +52,20 @@ ATTRIB -h "BTConnectable.java" /s
 :---------------------------
 cd "%~dp0\src\org\catrobat\catroid\common"
 ATTRIB +h "BrickValues.java" /s
+ATTRIB +h "BroadcastWaitSequenceMap.java" /s
+ATTRIB +h "BroadcastSequenceMap.java" /s
 ATTRIB +h "Constants.java" /s
 ATTRIB +h "FileChecksumContainer.java" /s
 ATTRIB +h "LookData.java" /s
 ATTRIB +h "MessageContainer.java" /s
 ATTRIB +h "ProjectData.java" /s
 ATTRIB +h "ScreenValues.java" /s
+ATTRIB +h "ScreenModes.java" /s
 ATTRIB +h "SoundInfo.java" /s
 ATTRIB +h "StandardProjectHandler.java" /s
 call:deleteAllFiles
+ATTRIB -h "BroadcastWaitSequenceMap.java" /s
+ATTRIB -h "BroadcastSequenceMap.java" /s
 ATTRIB -h "BrickValues.java" /s
 ATTRIB -h "Constants.java" /s
 ATTRIB -h "FileChecksumContainer.java" /s
@@ -64,6 +73,7 @@ ATTRIB -h "LookData.java" /s
 ATTRIB -h "MessageContainer.java" /s
 ATTRIB -h "ProjectData.java" /s
 ATTRIB -h "ScreenValues.java" /s
+ATTRIB -h "ScreenModes.java" /s
 ATTRIB -h "SoundInfo.java" /s
 ATTRIB -h "StandardProjectHandler.java" /s
 @echo "| common                                     |    DONE    |"
@@ -74,6 +84,7 @@ ATTRIB -h "StandardProjectHandler.java" /s
 :----------------------------
 cd "%~dp0\src\org\catrobat\catroid\content"
 ATTRIB +h "BroadcastEvent.java" /s
+ATTRIB +h "BroadcastHandler.java" /s
 ATTRIB +h "BroadcastListener.java" /s
 ATTRIB +h "BroadcastMessage.java" /s
 ATTRIB +h "BroadcastScript.java" /s
@@ -86,6 +97,7 @@ ATTRIB +h "WhenScript.java" /s
 ATTRIB +h "XmlHeader.java" /s
 call:deleteAllFiles
 ATTRIB -h "BroadcastEvent.java" /s
+ATTRIB -h "BroadcastHandler.java" /s
 ATTRIB -h "BroadcastListener.java" /s
 ATTRIB -h "BroadcastMessage.java" /s
 ATTRIB -h "BroadcastScript.java" /s

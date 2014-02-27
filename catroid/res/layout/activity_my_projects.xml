@@ -25,8 +25,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<<<<<<< HEAD
-=======
+
     <LinearLayout
         android:id="@+id/progress_circle"
         android:layout_width="match_parent"
@@ -47,7 +46,6 @@
         android:id="@+id/bottom_bar"
         layout="@layout/bottom_bar" />
 
->>>>>>> master
     <fragment
         android:id="@+id/fragment_select_program"
         android:layout_width="match_parent"
