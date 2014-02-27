@@ -23,14 +23,12 @@
 package org.catrobat.catroid.stage;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.os.SystemClock;
 import android.util.Log;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -83,8 +81,6 @@ public class StageListener implements ApplicationListener {
 	private String pathForScreenshot;
 	private int screenshotWidth;
 	private int screenshotHeight;
-	private int screenshotX;
-	private int screenshotY;
 	private byte[] screenshot = null;
 	// in first frame, framebuffer could be empty and screenshot
 	// would be white
@@ -123,6 +119,8 @@ public class StageListener implements ApplicationListener {
 	private float virtualWidthHalf;
 	private float virtualHeightHalf;
 	private byte[] thumbnail;
+	private int screenshotY;
+	private int screenshotX;
 
 	public StageListener() {
 
@@ -165,9 +163,8 @@ public class StageListener implements ApplicationListener {
 				sprite.resume();
 			}
 			passepartout = new Passepartout(ScreenValues.SCREEN_WIDTH, ScreenValues.SCREEN_HEIGHT,
-					maximizeViewPortWidth, maximizeViewPortHeight, virtualWidth, virtualHeight
-				stage.addActor(passepartout);
-
+					maximizeViewPortWidth, maximizeViewPortHeight, virtualWidth, virtualHeight);
+			stage.addActor(passepartout);
 			if (sprites.size() > 0) {
 				sprites.get(0).look.setLookData(createWhiteBackgroundLookData());
 			}
@@ -296,7 +293,6 @@ public class StageListener implements ApplicationListener {
 			reloadProject = false;
 		}
 
-<<<<<<< HEAD
 		switch (screenMode) {
 			case MAXIMIZE:
 				Gdx.gl.glViewport(maximizeViewPortX, maximizeViewPortY, maximizeViewPortWidth, maximizeViewPortHeight);
@@ -307,8 +303,6 @@ public class StageListener implements ApplicationListener {
 				break;
 		}
 
-=======
->>>>>>> master
 		batch.setProjectionMatrix(camera.combined);
 
 		if (firstStart) {
@@ -388,14 +382,14 @@ public class StageListener implements ApplicationListener {
 		if (!finished) {
 			this.finish();
 		}
-<<<<<<< HEAD
+
 		if (stage != null) {
-			stage.dispose();
-=======
-		stage.dispose();
-		font.dispose();
-		axes.dispose();
-		disposeTextures();
+			//stage.dispose();
+		}
+		//stage.dispose();
+		//font.dispose();
+		//axes.dispose();
+		//disposeTextures();
 	}
 
 	public boolean makeManualScreenshot() {
@@ -408,8 +402,6 @@ public class StageListener implements ApplicationListener {
 
 	private boolean saveScreenshot(byte[] screenshot, String fileName) {
 		int length = screenshot.length;
-		Bitmap fullScreenBitmap;
-		Bitmap centerSquareBitmap;
 		int[] colors = new int[length / 4];
 
 		if (colors.length != screenshotWidth * screenshotHeight || colors.length == 0) {
@@ -419,13 +411,13 @@ public class StageListener implements ApplicationListener {
 		for (int i = 0; i < length; i += 4) {
 			colors[i / 4] = android.graphics.Color.argb(255, screenshot[i + 0] & 0xFF, screenshot[i + 1] & 0xFF,
 					screenshot[i + 2] & 0xFF);
->>>>>>> master
 		}
 		if (font != null) {
 			font.dispose();
 		}
 
 		disposeTextures();
+		return true;
 	}
 
 	public byte[] getPixels(int x, int y, int width, int height) {

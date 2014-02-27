@@ -200,11 +200,13 @@ ATTRIB +h "OnUtteranceCompletedListenerContainer.java" /s
 ATTRIB +h "OrthoCamController.java" /s
 ATTRIB +h "PreStageActivity.java" /s
 ATTRIB +h "StageListener.java" /s
+ATTRIB +h "Passepartout.java" /s
 call:deleteAllFiles
 ATTRIB -h "OnUtteranceCompletedListenerContainer.java" /s
 ATTRIB -h "OrthoCamController.java" /s
 ATTRIB -h "PreStageActivity.java" /s
 ATTRIB -h "StageListener.java" /s
+ATTRIB -h "Passepartout.java" /s
 @echo "| stage                                      |    DONE    |"
 @echo "+--------------------------------------------+------------+"
 
