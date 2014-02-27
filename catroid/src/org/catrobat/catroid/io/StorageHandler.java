@@ -129,6 +129,7 @@ public final class StorageHandler {
 	private XStream xstream;
 
 	private File backPackSoundDirectory;
+	private FileInputStream fileInputStream;
 
 	private Lock loadSaveLock = new ReentrantLock();
 
@@ -236,13 +237,33 @@ public final class StorageHandler {
 		loadSaveLock.lock();
 		try {
 			File projectCodeFile = new File(buildProjectPath(projectName), PROJECTCODE_NAME);
-			return (Project) xstream.fromXML(new FileInputStream(projectCodeFile));
+			fileInputStream = new FileInputStream(projectCodeFile);
+			return (Project) xstream.fromXML(fileInputStream);
 		} catch (Exception exception) {
 			Log.e(TAG, "Loading project " + projectName + " failed.", exception);
 			return null;
 		} finally {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException ioException) {
+					Log.e(TAG, "can't close fileStream.", ioException);
+				}
+			}
 			loadSaveLock.unlock();
 		}
+	}
+
+	public boolean cancelLoadProject() {
+		if (fileInputStream != null) {
+			try {
+				fileInputStream.close();
+				return true;
+			} catch (IOException ioException) {
+				Log.e(TAG, "can't close fileStream.", ioException);
+			}
+		}
+		return false;
 	}
 
 	public boolean saveProject(Project project) {
@@ -408,8 +429,12 @@ public final class StorageHandler {
 		}
 
 		Project project = ProjectManager.getInstance().getCurrentProject();
-		if ((imageDimensions[0] <= project.getXmlHeader().virtualScreenWidth)
-				&& (imageDimensions[1] <= project.getXmlHeader().virtualScreenHeight)) {
+
+		if ((imageDimensions[0] > project.getXmlHeader().virtualScreenWidth)
+				&& (imageDimensions[1] > project.getXmlHeader().virtualScreenHeight)) {
+			File outputFile = new File(buildPath(imageDirectory.getAbsolutePath(), inputFile.getName()));
+			return copyAndResizeImage(outputFile, inputFile, imageDirectory);
+		} else {
 			String checksumSource = Utils.md5Checksum(inputFile);
 
 			if (newName != null) {
@@ -424,9 +449,6 @@ public final class StorageHandler {
 
 			File outputFile = new File(newFilePath);
 			return copyFileAddCheckSum(outputFile, inputFile, imageDirectory);
-		} else {
-			File outputFile = new File(buildPath(imageDirectory.getAbsolutePath(), inputFile.getName()));
-			return copyAndResizeImage(outputFile, inputFile, imageDirectory);
 		}
 	}
 
@@ -472,7 +494,9 @@ public final class StorageHandler {
 				checksumCompressedFile + "_" + inputFile.getName());
 
 		if (!fileChecksumContainer.addChecksum(checksumCompressedFile, newFilePath)) {
-			outputFile.delete();
+			if (!outputFile.getAbsolutePath().equalsIgnoreCase(inputFile.getAbsolutePath())) {
+				outputFile.delete();
+			}
 			return new File(fileChecksumContainer.getPath(checksumCompressedFile));
 		}
 
