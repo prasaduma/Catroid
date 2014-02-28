@@ -188,46 +188,6 @@ public class ExtendedActions extends Actions {
 		return action;
 	}
 
-	public static TemporalAction droneTakeOff() {
-		return action(DroneTakeoffAction.class);
-	}
-
-	public static TemporalAction droneLand() {
-		return action(DroneTakeoffAction.class);
-	}
-
-	public static TemporalAction droneMoveUp() {
-		return action(DroneMoveUpAction.class);
-	}
-
-	public static TemporalAction droneMoveDown() {
-		return action(DroneMoveDownAction.class);
-	}
-
-	public static TemporalAction droneMoveLeft() {
-		return action(DroneMoveLeftAction.class);
-	}
-
-	public static TemporalAction droneMoveRight() {
-		return action(DroneMoveRightAction.class);
-	}
-
-	public static TemporalAction droneMoveForward() {
-		return action(DroneMoveForwardAction.class);
-	}
-
-	public static TemporalAction droneMoveBackward() {
-		return action(DroneMoveBackwardAction.class);
-	}
-
-	public static TemporalAction dronePlayLedAnimation() {
-		return action(DronePlayLedAnimationAction.class);
-	}
-
-	public static TemporalAction droneFlip() {
-		return action(DroneFlipAction.class);
-	}
-
 	public static MoveNStepsAction moveNSteps(Sprite sprite, Formula steps) {
 		MoveNStepsAction action = action(MoveNStepsAction.class);
 		action.setSprite(sprite);
@@ -390,4 +350,48 @@ public class ExtendedActions extends Actions {
 		action.setSprite(sprite);
 		return action;
 	}
+
+	public static TemporalAction droneTakeOff() {
+		return action(DroneTakeoffAction.class);
+	}
+
+	public static TemporalAction droneLand() {
+		return action(DroneTakeoffAction.class);
+	}
+
+	public static TemporalAction droneMoveUp(Sprite sprite, Formula time) {
+		DroneMoveUpAction action = action(DroneMoveUpAction.class);
+		action.setSprite(sprite);
+		action.setDelay(time);
+		return action;
+	}
+
+	public static TemporalAction droneMoveDown() {
+		return action(DroneMoveDownAction.class);
+	}
+
+	public static TemporalAction droneMoveLeft() {
+		return action(DroneMoveLeftAction.class);
+	}
+
+	public static TemporalAction droneMoveRight() {
+		return action(DroneMoveRightAction.class);
+	}
+
+	public static TemporalAction droneMoveForward() {
+		return action(DroneMoveForwardAction.class);
+	}
+
+	public static TemporalAction droneMoveBackward() {
+		return action(DroneMoveBackwardAction.class);
+	}
+
+	public static TemporalAction dronePlayLedAnimation() {
+		return action(DronePlayLedAnimationAction.class);
+	}
+
+	public static TemporalAction droneFlip() {
+		return action(DroneFlipAction.class);
+	}
+
 }

@@ -223,7 +223,7 @@ public class CategoryBricksFactory {
 		droneBrickList.add(new DroneTakeOffBrick(sprite));
 		droneBrickList.add(new DroneLandBrick(sprite));
 
-		droneBrickList.add(new DroneMoveUpBrick(sprite));
+		droneBrickList.add(new DroneMoveUpBrick(sprite, BrickValues.FLY));
 		droneBrickList.add(new DroneMoveDownBrick(sprite));
 		droneBrickList.add(new DroneMoveLeftBrick(sprite));
 		droneBrickList.add(new DroneMoveRightBrick(sprite));
