@@ -110,12 +110,12 @@ public final class BroadcastHandler {
 		for (Sprite sprites : ProjectManager.getInstance().getCurrentProject().getSpriteList()) {
 			for (Action actionOfLook : sprites.look.getActions()) {
 				if (action == actionOfLook) {
-					actionOfLook.restart();
+					sprites.look.actionsToRestart.add(actionOfLook);
 					return true;
 				} else {
 					if (actionOfLook instanceof SequenceAction && ((SequenceAction) actionOfLook).getActions().size > 0
 							&& ((SequenceAction) actionOfLook).getActions().get(0) == action) {
-						actionOfLook.restart();
+						sprites.look.actionsToRestart.add(actionOfLook);
 						return true;
 					}
 				}
