@@ -125,25 +125,6 @@ public final class Util {
 		return result;
 	}
 
-	public static File createBackgroundImage(Context context, String name) {
-		Project project = (Project) Cucumber.get(Cucumber.KEY_PROJECT);
-		String directoryName = Utils.buildPath(Utils.buildProjectPath(project.getName()), Constants.IMAGE_DIRECTORY);
-		File directory = new File(directoryName);
-		Point screen = Util.getScreenDimensions(context);
-		Bitmap backgroundBitmap = ImageEditing.createSingleColorBitmap(screen.x, screen.y, Color.BLUE);
-		try {
-			directory.mkdirs();
-			File backgroundTemp = File.createTempFile(name, ".png", directory);
-			StorageHandler.saveBitmapToImageFile(backgroundTemp, backgroundBitmap);
-			File backgroundFile = new File(directoryName, Utils.md5Checksum(backgroundTemp) + "_" + backgroundTemp.getName());
-			backgroundTemp.renameTo(backgroundFile);
-			return backgroundFile;
-		} catch (IOException e) {
-			fail(e.getMessage());
-			return null;
-		}
-	}
-
 	public static Formula newUserVariableFormula(String name) {
 		return new Formula(new FormulaElement(FormulaElement.ElementType.USER_VARIABLE, name, null));
 	}
