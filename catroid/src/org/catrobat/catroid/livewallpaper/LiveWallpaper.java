@@ -73,10 +73,10 @@ public class LiveWallpaper extends AndroidLiveWallpaperService {
 		this.previewEngine = previewEngine;
 	}
 
-	private LiveWallpaperEngine homeEngine;
+	//private LiveWallpaperEngine homeEngine;
 
 	private StageListener previewStageListener = null;
-	private StageListener homeScreenStageListener = null;
+	//private StageListener homeScreenStageListener = null;
 
 	public boolean TEST = false;
 
@@ -109,20 +109,20 @@ public class LiveWallpaper extends AndroidLiveWallpaperService {
 	public ApplicationListener createListener(boolean isPreview) {
 		setScreenSize(isPreview);
 
-		if (isPreview) {
-			previewStageListener = new StageListener(true);
-			previewEngine = lastCreatedWallpaperEngine;
-			previewEngine.name = "Preview";
-			return previewStageListener;
-		} else {
-			if (previewEngine != null) {
-				previewEngine.onPause();
-			}
-			homeScreenStageListener = new StageListener(true);
-			homeEngine = lastCreatedWallpaperEngine;
-			homeEngine.name = "Home";
-			return homeScreenStageListener;
-		}
+		//if (isPreview) {
+		previewStageListener = new StageListener(true);
+		previewEngine = lastCreatedWallpaperEngine;
+		previewEngine.name = "Preview";
+
+		//} else {
+		//	if (previewEngine != null) {
+		//		previewEngine.onPause();
+		//	}
+		//homeScreenStageListener = new StageListener(true);
+		//homeEngine = lastCreatedWallpaperEngine;
+		//homeEngine.name = "Home";
+		return previewStageListener;
+		//}
 	}
 
 	public void changeWallpaperProgram() {
@@ -193,11 +193,11 @@ public class LiveWallpaper extends AndroidLiveWallpaperService {
 		}
 
 		private StageListener getLocalStageListener() {
-			if (this.isPreview()) {
-				return previewStageListener;
-			} else {
-				return homeScreenStageListener;
-			}
+			//if (this.isPreview()) {
+			return previewStageListener;
+			//} else {
+			//return homeScreenStageListener;
+			//}
 		}
 
 		@Override

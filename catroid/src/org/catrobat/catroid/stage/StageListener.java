@@ -122,10 +122,6 @@ public class StageListener implements ApplicationListener {
 	private int screenshotY;
 	private int screenshotX;
 
-	public StageListener() {
-
-	}
-
 	public StageListener(boolean isLiveWallpaper) {
 		this.isLiveWallpaper = isLiveWallpaper;
 		screenWidth = ScreenValues.SCREEN_WIDTH;
@@ -384,7 +380,7 @@ public class StageListener implements ApplicationListener {
 		}
 
 		if (stage != null) {
-			//stage.dispose();
+			stage.dispose();
 		}
 		//stage.dispose();
 		//font.dispose();
