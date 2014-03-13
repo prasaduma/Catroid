@@ -37,7 +37,7 @@
         android:visibility="gone" />
 
     <org.catrobat.catroid.ui.BrickLayout
-        android:id="@+id/brick_drone_move_down"
+        android:id="@+id/brick_drone_move_down_layout"
         style="@style/BrickContainer.Drone.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,9 +46,25 @@
         app:verticalSpacing="@dimen/brick_flow_layout_vertical_spacing" >
 
         <TextView
-            android:id="@+id/ValueTextView"
-            style="@style/BrickText.SingleLine"
+            android:id="@+id/brick_drone_move_down_label"
+            style="@style/BrickText.Multiple"
             android:text="@string/brick_drone_move_down" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/brick_drone_move_down_prototype_text_view"
+            style="@style/BrickPrototypeTextView" />
+
+        <TextView
+            android:id="@+id/brick_drone_move_down_edit_text"
+            style="@style/BrickEditText"
+            app:layout_inputType="number"
+            app:layout_textField="true" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/brick_drone_move_down_second_text_view"
+            style="@style/BrickText.Multiple" >
         </TextView>
     </org.catrobat.catroid.ui.BrickLayout>
 

@@ -26,11 +26,29 @@ import android.util.Log;
 
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 
-import org.catrobat.catroid.exceptions.NotYetImplementedException;
+import org.catrobat.catroid.content.Sprite;
+import org.catrobat.catroid.drone.DroneServiceWrapper;
+import org.catrobat.catroid.formulaeditor.Formula;
 
 public class DroneMoveDownAction extends TemporalAction {
 
 	private static final String TAG = DroneMoveDownAction.class.getSimpleName();
+
+	private Sprite sprite;
+	private Formula duration;
+
+	@Override
+	protected void begin() {
+		super.setDuration(duration.interpretFloat(sprite));
+	}
+
+	public void setDelay(Formula delay) {
+		this.duration = delay;
+	}
+
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
+	}
 
 	@Override
 	protected void update(float percent) {
@@ -42,13 +60,7 @@ public class DroneMoveDownAction extends TemporalAction {
 	public boolean act(float delta) {
 		Boolean superReturn = super.act(delta);
 		Log.d(TAG, "Do Drone Stuff once, superReturn = " + superReturn.toString());
-		//DroneServiceWrapper.getInstance().getDroneService().triggerTakeOff();
-		try {
-			throw new NotYetImplementedException("YEAH, that we have to do!");
-		} catch (NotYetImplementedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DroneServiceWrapper.getInstance().getDroneService().moveDown(duration.interpretFloat(sprite));
 		return superReturn;
 	}
 

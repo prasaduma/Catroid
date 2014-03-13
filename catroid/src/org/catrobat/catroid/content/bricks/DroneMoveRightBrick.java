@@ -1,4 +1,5 @@
 /**
+ *  Catroid: An on-device visual programming system for Android devices
  *  Copyright (C) 2010-2013 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *  
@@ -22,11 +23,9 @@
 package org.catrobat.catroid.content.bricks;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -38,22 +37,47 @@ import org.catrobat.catroid.R;
 import org.catrobat.catroid.content.Script;
 import org.catrobat.catroid.content.Sprite;
 import org.catrobat.catroid.content.actions.ExtendedActions;
+import org.catrobat.catroid.formulaeditor.Formula;
+import org.catrobat.catroid.ui.fragment.FormulaEditorFragment;
+import org.catrobat.catroid.utils.Utils;
 
 import java.util.List;
 
-public class DroneMoveRightBrick extends BrickBaseType implements OnItemSelectedListener {
+public class DroneMoveRightBrick extends BrickBaseType implements OnClickListener, FormulaBrick {
 	private static final long serialVersionUID = 1L;
+	private Formula timeToFlyInSeconds;
+	private transient View prototypeView;
 
-	private transient AdapterView<?> adapterView;
-
-	public DroneMoveRightBrick(Sprite sprite) {
+	public DroneMoveRightBrick(Sprite sprite, int timeInMillisecondsValue) {
 		this.sprite = sprite;
+		timeToFlyInSeconds = new Formula(timeInMillisecondsValue / 1000.0);
+	}
+
+	public DroneMoveRightBrick(Sprite sprite, Formula time) {
+		this.sprite = sprite;
+		this.timeToFlyInSeconds = time;
+	}
+
+	public DroneMoveRightBrick() {
 
 	}
 
 	@Override
+	public Formula getFormula() {
+		return timeToFlyInSeconds;
+	}
+
+	@Override
 	public int getRequiredResources() {
-		return ARDRONE_SUPPORT;
+		return NO_RESOURCES;
+	}
+
+	public Formula getTimeToWait() {
+		return timeToFlyInSeconds;
+	}
+
+	public void setTimeToWait(Formula timeToWaitInSeconds) {
+		this.timeToFlyInSeconds = timeToWaitInSeconds;
 	}
 
 	@Override
@@ -64,29 +88,16 @@ public class DroneMoveRightBrick extends BrickBaseType implements OnItemSelected
 	}
 
 	@Override
-	public View getPrototypeView(Context context) {
-		View prototypeView = View.inflate(context, R.layout.brick_drone_move_right, null);
-
-		return prototypeView;
-	}
-
-	@Override
-	public Brick clone() {
-		return new DroneMoveRightBrick(getSprite());
-	}
-
-	@Override
 	public View getView(Context context, int brickId, BaseAdapter baseAdapter) {
 		if (animationState) {
 			return view;
 		}
-		if (view == null) {
-			alphaValue = 255;
-		}
+
 		view = View.inflate(context, R.layout.brick_drone_move_right, null);
 		view = getViewWithAlpha(alphaValue);
 
 		setCheckboxView(R.id.brick_drone_move_right_checkbox);
+
 		final Brick brickInstance = this;
 		checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -96,16 +107,44 @@ public class DroneMoveRightBrick extends BrickBaseType implements OnItemSelected
 			}
 		});
 
+		TextView text = (TextView) view.findViewById(R.id.brick_drone_move_right_prototype_text_view);
+		TextView edit = (TextView) view.findViewById(R.id.brick_drone_move_right_edit_text);
+		timeToFlyInSeconds.setTextFieldId(R.id.brick_drone_move_right_edit_text);
+		timeToFlyInSeconds.refreshTextField(view);
+
+		TextView times = (TextView) view.findViewById(R.id.brick_drone_move_right_second_text_view);
+
+		if (timeToFlyInSeconds.isSingleNumberFormula()) {
+			times.setText(view.getResources().getQuantityString(R.plurals.second_plural,
+					Utils.convertDoubleToPluralInteger(timeToFlyInSeconds.interpretDouble(sprite))));
+		} else {
+
+			// Random Number to get into the "other" keyword for values like 0.99 or 2.001 seconds or degrees
+			// in hopefully all possible languages
+			times.setText(view.getResources().getQuantityString(R.plurals.second_plural,
+					Utils.TRANSLATION_PLURAL_OTHER_INTEGER));
+		}
+
+		text.setVisibility(View.GONE);
+		edit.setVisibility(View.VISIBLE);
+		edit.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		adapterView = parent;
+	public View getPrototypeView(Context context) {
+		prototypeView = View.inflate(context, R.layout.brick_drone_move_right, null);
+		TextView textWait = (TextView) prototypeView.findViewById(R.id.brick_drone_move_right_prototype_text_view);
+		textWait.setText(String.valueOf(timeToFlyInSeconds.interpretInteger(sprite)));
+		TextView times = (TextView) prototypeView.findViewById(R.id.brick_drone_move_right_second_text_view);
+		times.setText(context.getResources().getQuantityString(R.plurals.second_plural,
+				Utils.convertDoubleToPluralInteger(timeToFlyInSeconds.interpretDouble(sprite))));
+		return prototypeView;
 	}
 
 	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
+	public Brick clone() {
+		return new DroneMoveRightBrick(getSprite(), timeToFlyInSeconds.clone());
 	}
 
 	@Override
@@ -113,16 +152,18 @@ public class DroneMoveRightBrick extends BrickBaseType implements OnItemSelected
 
 		if (view != null) {
 
-			View layout = view.findViewById(R.id.brick_drone_move_right);
+			View layout = view.findViewById(R.id.brick_drone_move_right_layout);
 			Drawable background = layout.getBackground();
 			background.setAlpha(alphaValue);
 
-			TextView textLegoMotorStopLabel = (TextView) view.findViewById(R.id.ValueTextView);
-			textLegoMotorStopLabel.setTextColor(textLegoMotorStopLabel.getTextColors().withAlpha(alphaValue));
-			ColorStateList color = textLegoMotorStopLabel.getTextColors().withAlpha(alphaValue);
-			if (adapterView != null) {
-				((TextView) adapterView.getChildAt(0)).setTextColor(color);
-			}
+			TextView textWaitLabel = (TextView) view.findViewById(R.id.brick_drone_move_right_label);
+			TextView textWaitSeconds = (TextView) view.findViewById(R.id.brick_drone_move_right_second_text_view);
+			TextView editWait = (TextView) view.findViewById(R.id.brick_drone_move_right_edit_text);
+
+			textWaitLabel.setTextColor(textWaitLabel.getTextColors().withAlpha(alphaValue));
+			textWaitSeconds.setTextColor(textWaitSeconds.getTextColors().withAlpha(alphaValue));
+			editWait.setTextColor(editWait.getTextColors().withAlpha(alphaValue));
+			editWait.getBackground().setAlpha(alphaValue);
 
 			this.alphaValue = (alphaValue);
 
@@ -132,8 +173,16 @@ public class DroneMoveRightBrick extends BrickBaseType implements OnItemSelected
 	}
 
 	@Override
+	public void onClick(View view) {
+		if (checkbox.getVisibility() == View.VISIBLE) {
+			return;
+		}
+		FormulaEditorFragment.showFragment(view, this, timeToFlyInSeconds);
+	}
+
+	@Override
 	public List<SequenceAction> addActionToSequence(SequenceAction sequence) {
-		sequence.addAction(ExtendedActions.droneMoveRight());
+		sequence.addAction(ExtendedActions.droneMoveRight(sprite, timeToFlyInSeconds));
 		return null;
 	}
 }

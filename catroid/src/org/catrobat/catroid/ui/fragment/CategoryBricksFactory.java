@@ -222,17 +222,14 @@ public class CategoryBricksFactory {
 		List<Brick> droneBrickList = new ArrayList<Brick>();
 		droneBrickList.add(new DroneTakeOffBrick(sprite));
 		droneBrickList.add(new DroneLandBrick(sprite));
-
-		droneBrickList.add(new DroneMoveUpBrick(sprite, BrickValues.FLY));
-		droneBrickList.add(new DroneMoveDownBrick(sprite));
-		droneBrickList.add(new DroneMoveLeftBrick(sprite));
-		droneBrickList.add(new DroneMoveRightBrick(sprite));
-		droneBrickList.add(new DroneMoveForwardBrick(sprite));
-		droneBrickList.add(new DroneMoveBackwardBrick(sprite));
-
 		droneBrickList.add(new DronePlayLedAnimationBrick(sprite));
 		droneBrickList.add(new DroneFlipBrick(sprite));
-
+		droneBrickList.add(new DroneMoveUpBrick(sprite, BrickValues.FLY));
+		droneBrickList.add(new DroneMoveDownBrick(sprite, BrickValues.FLY));
+		droneBrickList.add(new DroneMoveLeftBrick(sprite, BrickValues.FLY));
+		droneBrickList.add(new DroneMoveRightBrick(sprite, BrickValues.FLY));
+		droneBrickList.add(new DroneMoveForwardBrick(sprite, BrickValues.FLY));
+		droneBrickList.add(new DroneMoveBackwardBrick(sprite, BrickValues.FLY));
 		return droneBrickList;
 	}
 

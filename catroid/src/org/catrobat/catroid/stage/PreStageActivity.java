@@ -28,6 +28,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -45,6 +46,7 @@ import android.widget.Toast;
 
 import com.parrot.freeflight.receivers.DroneConnectionChangeReceiverDelegate;
 import com.parrot.freeflight.receivers.DroneConnectionChangedReceiver;
+import com.parrot.freeflight.receivers.DroneReadyReceiver;
 import com.parrot.freeflight.receivers.DroneReadyReceiverDelegate;
 import com.parrot.freeflight.service.DroneControlService;
 
@@ -128,24 +130,24 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 			}
 		}
 
-		//		if ((requiredResources & Brick.ARDRONE_SUPPORT) > 0) {
-		//			Log.d(TAG, "Adding drone support!");
-		//			Intent startService = new Intent(this, DroneControlService.class);
-		//
-		//			Object obj = startService(startService);
-		//
-		//			boolean isSuccessful = bindService(new Intent(this, DroneControlService.class),
-		//					this.droneServiceConnection, Context.BIND_AUTO_CREATE);
-		//			// TODO: Abfrage sinnlos, auch wenn die Drone ausgeschalten ist, wird vermeindlich eine Verbindung hergestellt
-		//			if (obj == null || !isSuccessful) {
-		//				Toast.makeText(this, "Connection to the drone failed!", Toast.LENGTH_LONG).show();
-		//				resourceFailed();
-		//			} else {
-		//				droneReadyReceiver = new DroneReadyReceiver(this);
-		//				droneConnectionChangeReceiver = new DroneConnectionChangedReceiver(this);
-		//
-		//			}
-		//		}
+		if ((requiredResources & Brick.ARDRONE_SUPPORT) > 0) {
+			Log.d(TAG, "Adding drone support!");
+			Intent startService = new Intent(this, DroneControlService.class);
+
+			Object obj = startService(startService);
+
+			boolean isSuccessful = bindService(new Intent(this, DroneControlService.class),
+					this.droneServiceConnection, Context.BIND_AUTO_CREATE);
+			// TODO: Abfrage sinnlos, auch wenn die Drone ausgeschalten ist, wird vermeindlich eine Verbindung hergestellt
+			if (obj == null || !isSuccessful) {
+				Toast.makeText(this, "Connection to the drone failed!", Toast.LENGTH_LONG).show();
+				resourceFailed();
+			} else {
+				droneReadyReceiver = new DroneReadyReceiver(this);
+				droneConnectionChangeReceiver = new DroneConnectionChangedReceiver(this);
+
+			}
+		}
 
 		if (requiredResourceCounter == Brick.NO_RESOURCES) {
 			startStage();

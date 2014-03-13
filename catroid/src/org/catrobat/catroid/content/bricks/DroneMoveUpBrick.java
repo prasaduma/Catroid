@@ -182,7 +182,7 @@ public class DroneMoveUpBrick extends BrickBaseType implements OnClickListener, 
 
 	@Override
 	public List<SequenceAction> addActionToSequence(SequenceAction sequence) {
-		sequence.addAction(ExtendedActions.delay(sprite, timeToFlyInSeconds));
+		sequence.addAction(ExtendedActions.droneMoveUp(sprite, timeToFlyInSeconds));
 		return null;
 	}
 }

@@ -359,31 +359,46 @@ public class ExtendedActions extends Actions {
 		return action(DroneTakeoffAction.class);
 	}
 
-	public static TemporalAction droneMoveUp(Sprite sprite, Formula time) {
+	public static TemporalAction droneMoveUp(Sprite sprite, Formula seconds) {
 		DroneMoveUpAction action = action(DroneMoveUpAction.class);
 		action.setSprite(sprite);
-		action.setDelay(time);
+		action.setDelay(seconds);
 		return action;
 	}
 
-	public static TemporalAction droneMoveDown() {
-		return action(DroneMoveDownAction.class);
+	public static TemporalAction droneMoveDown(Sprite sprite, Formula seconds) {
+		DroneMoveDownAction action = action(DroneMoveDownAction.class);
+		action.setSprite(sprite);
+		action.setDelay(seconds);
+		return action;
 	}
 
-	public static TemporalAction droneMoveLeft() {
-		return action(DroneMoveLeftAction.class);
+	public static TemporalAction droneMoveLeft(Sprite sprite, Formula seconds) {
+		DroneMoveLeftAction action = action(DroneMoveLeftAction.class);
+		action.setSprite(sprite);
+		action.setDelay(seconds);
+		return action;
 	}
 
-	public static TemporalAction droneMoveRight() {
-		return action(DroneMoveRightAction.class);
+	public static TemporalAction droneMoveRight(Sprite sprite, Formula seconds) {
+		DroneMoveRightAction action = action(DroneMoveRightAction.class);
+		action.setSprite(sprite);
+		action.setDelay(seconds);
+		return action;
 	}
 
-	public static TemporalAction droneMoveForward() {
-		return action(DroneMoveForwardAction.class);
+	public static TemporalAction droneMoveForward(Sprite sprite, Formula seconds) {
+		DroneMoveForwardAction action = action(DroneMoveForwardAction.class);
+		action.setSprite(sprite);
+		action.setDelay(seconds);
+		return action;
 	}
 
-	public static TemporalAction droneMoveBackward() {
-		return action(DroneMoveBackwardAction.class);
+	public static TemporalAction droneMoveBackward(Sprite sprite, Formula seconds) {
+		DroneMoveBackwardAction action = action(DroneMoveBackwardAction.class);
+		action.setSprite(sprite);
+		action.setDelay(seconds);
+		return action;
 	}
 
 	public static TemporalAction dronePlayLedAnimation() {
