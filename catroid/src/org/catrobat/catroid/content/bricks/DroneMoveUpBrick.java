@@ -144,7 +144,7 @@ public class DroneMoveUpBrick extends BrickBaseType implements OnClickListener, 
 
 	@Override
 	public Brick clone() {
-		return new WaitBrick(getSprite(), timeToFlyInSeconds.clone());
+		return new DroneMoveUpBrick(getSprite(), timeToFlyInSeconds.clone());
 	}
 
 	@Override
