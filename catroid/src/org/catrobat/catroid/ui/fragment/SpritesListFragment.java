@@ -253,6 +253,8 @@ public class SpritesListFragment extends SherlockListFragment implements OnSprit
 
 		getSherlockActivity().getMenuInflater().inflate(R.menu.context_menu_default, menu);
 		menu.findItem(R.id.context_menu_copy).setVisible(true);
+        menu.findItem(R.id.context_menu_backpack).setVisible(false);
+        menu.findItem(R.id.context_menu_unpacking).setVisible(false);
 
 	}
 
