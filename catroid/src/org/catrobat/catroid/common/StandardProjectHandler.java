@@ -70,6 +70,22 @@ public final class StandardProjectHandler {
 		return createAndSaveStandardProject(projectName, context);
 	}
 
+	public static Project createAndSaveStandardDroneProject(Context context) throws IOException {
+		String projectName = context.getString(R.string.default_drone_project_name);
+		return createAndSaveStandardDroneProject(projectName, context);
+	}
+
+	public static Project createAndSaveStandardDroneProject(String projectName, Context context) throws IOException,
+			IllegalArgumentException {
+		Project defaultDroneProject = new Project(context, projectName);
+		StorageHandler.getInstance().saveProject(defaultDroneProject);
+		ProjectManager.getInstance().setProject(defaultDroneProject);
+
+		//TODO: Create the Project here
+
+		return defaultDroneProject;
+	}
+
 	public static Project createAndSaveStandardProject(String projectName, Context context) throws IOException,
 			IllegalArgumentException {
 		if (StorageHandler.getInstance().projectExists(projectName)) {

@@ -426,6 +426,7 @@
 
     <!-- defaultValues -->
     <string name="default_project_name">My first program</string>
+    <string name="default_drone_project_name">Drone test program</string>  
     <string name="default_project_sprites_mole_name">Mole</string>
     <string name="default_project_sprites_mole_moving">Moving Mole</string>
     <string name="default_project_sprites_mole_whacked">Whacked Mole</string>

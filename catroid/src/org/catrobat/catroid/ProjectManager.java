@@ -198,6 +198,11 @@ public final class ProjectManager implements OnLoadProjectCompleteListener, OnCh
 		try {
 			fileChecksumContainer = new FileChecksumContainer();
 			project = StandardProjectHandler.createAndSaveStandardProject(context);
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "Create Drone demo Program");
+				project = StandardProjectHandler.createAndSaveStandardDroneProject(context);
+			}
+
 			currentSprite = null;
 			currentScript = null;
 			return true;
