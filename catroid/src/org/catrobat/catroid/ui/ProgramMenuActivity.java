@@ -24,12 +24,12 @@ package org.catrobat.catroid.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.catrobat.catroid.ProjectManager;
 import org.catrobat.catroid.R;
@@ -40,23 +40,38 @@ import org.catrobat.catroid.stage.StageActivity;
 import java.util.concurrent.locks.Lock;
 
 public class ProgramMenuActivity extends BaseActivity {
-	private ActionBar actionBar;
+
+	private static final String TAG = ProgramMenuActivity.class.getSimpleName();
+	public static final String FORWARD_TO_SCRIPT_ACTIVITY = "forwardToScriptActivity";
+
 	private Lock viewSwitchLock = new ViewSwitchLock();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null && bundle.containsKey(FORWARD_TO_SCRIPT_ACTIVITY)) {
+			Intent intent = new Intent(this, ScriptActivity.class);
+			intent.putExtra(ScriptActivity.EXTRA_FRAGMENT_POSITION, bundle.getInt(FORWARD_TO_SCRIPT_ACTIVITY));
+			startActivity(intent);
+		}
+
 		setContentView(R.layout.activity_program_menu);
 
-		findViewById(R.id.button_add).setVisibility(View.GONE);
-		findViewById(R.id.bottom_bar_separator).setVisibility(View.GONE);
+		BottomBar.hideAddButton(this);
 
-		actionBar = getSupportActionBar();
+		final ActionBar actionBar = getSupportActionBar();
 
-		String title = ProjectManager.getInstance().getCurrentSprite().getName();
-		actionBar.setTitle(title);
-		actionBar.setHomeButtonEnabled(true);
+		//The try-catch block is a fix for this bug: https://github.com/Catrobat/Catroid/issues/618
+		try {
+			String title = ProjectManager.getInstance().getCurrentSprite().getName();
+			actionBar.setTitle(title);
+			actionBar.setHomeButtonEnabled(true);
+		} catch (NullPointerException nullPointerException) {
+			Log.e(TAG, "onCreate: NPE -> finishing", nullPointerException);
+			finish();
+		}
 	}
 
 	@Override
@@ -85,17 +100,6 @@ public class ProgramMenuActivity extends BaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_program_activity, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.settings: {
-				Intent intent = new Intent(this, SettingsActivity.class);
-				startActivity(intent);
-			}
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public void handleScriptsButton(View view) {

@@ -25,13 +25,13 @@ package org.catrobat.catroid.ui;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -66,7 +66,6 @@ public class ScriptActivity extends BaseActivity {
 	public static final String ACTION_SPRITE_RENAMED = "org.catrobat.catroid.SPRITE_RENAMED";
 	public static final String ACTION_SPRITES_LIST_INIT = "org.catrobat.catroid.SPRITES_LIST_INIT";
 	public static final String ACTION_SPRITES_LIST_CHANGED = "org.catrobat.catroid.SPRITES_LIST_CHANGED";
-	public static final String ACTION_NEW_BRICK_ADDED = "org.catrobat.catroid.NEW_BRICK_ADDED";
 	public static final String ACTION_BRICK_LIST_CHANGED = "org.catrobat.catroid.BRICK_LIST_CHANGED";
 	public static final String ACTION_LOOK_DELETED = "org.catrobat.catroid.LOOK_DELETED";
 	public static final String ACTION_LOOK_RENAMED = "org.catrobat.catroid.LOOK_RENAMED";
@@ -95,12 +94,11 @@ public class ScriptActivity extends BaseActivity {
 	private boolean isLookFragmentFromSetLookBrickNew = false;
 	private boolean isLookFragmentHandleAddButtonHandled = false;
 
-	private LinearLayout buttonAdd = null;
+	private ImageButton buttonAdd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_script);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -124,13 +122,13 @@ public class ScriptActivity extends BaseActivity {
 		String currentSprite = ProjectManager.getInstance().getCurrentSprite().getName();
 		actionBar.setTitle(currentSprite);
 
-		buttonAdd = (LinearLayout) findViewById(R.id.button_add);
+		buttonAdd = (ImageButton) findViewById(R.id.button_add);
 		updateHandleAddButtonClickListener();
 	}
 
 	public void updateHandleAddButtonClickListener() {
 		if (buttonAdd == null) {
-			buttonAdd = (LinearLayout) findViewById(R.id.button_add);
+			buttonAdd = (ImageButton) findViewById(R.id.button_add);
 		}
 		buttonAdd.setOnClickListener(new OnClickListener() {
 			@Override
@@ -218,6 +216,10 @@ public class ScriptActivity extends BaseActivity {
 		}
 
 		switch (item.getItemId()) {
+			case R.id.backpack:
+				currentFragment.startBackPackActionMode();
+				break;
+
 			case R.id.show_details:
 				handleShowDetails(!currentFragment.getShowDetails(), item);
 				break;
@@ -227,6 +229,12 @@ public class ScriptActivity extends BaseActivity {
 				break;
 
 			case R.id.cut:
+				break;
+
+			case R.id.unpacking:
+				Intent intent = new Intent(currentFragment.getActivity(), BackPackActivity.class);
+				intent.putExtra(BackPackActivity.EXTRA_FRAGMENT_POSITION, FRAGMENT_SOUNDS);
+				startActivity(intent);
 				break;
 
 			case R.id.insert_below:
@@ -243,15 +251,6 @@ public class ScriptActivity extends BaseActivity {
 
 			case R.id.delete:
 				currentFragment.startDeleteActionMode();
-				break;
-
-			case R.id.settings:
-				Intent settingsIntent = new Intent(ScriptActivity.this, SettingsActivity.class);
-				startActivity(settingsIntent);
-				break;
-
-			case R.id.edit_in_pocket_paint:
-				currentFragment.startEditInPocketPaintActionMode();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -275,9 +274,6 @@ public class ScriptActivity extends BaseActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		Log.i("info", "onKeyDown() ScriptActivity.... keyCode: " + keyCode);
-
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
 		for (String tag : FormulaEditorListFragment.TAGS) {
@@ -378,6 +374,15 @@ public class ScriptActivity extends BaseActivity {
 
 	public void handlePlayButton(View view) {
 		updateHandleAddButtonClickListener();
+
+		Fragment formulaEditorFragment = fragmentManager
+				.findFragmentByTag(FormulaEditorFragment.FORMULA_EDITOR_FRAGMENT_TAG);
+		if (formulaEditorFragment != null) {
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.remove(formulaEditorFragment);
+			fragmentTransaction.commit();
+		}
+
 		if (isHoveringActive()) {
 			scriptFragment.getListView().animateHoveringBrick();
 		} else {
@@ -430,13 +435,7 @@ public class ScriptActivity extends BaseActivity {
 	public void handleShowDetails(boolean showDetails, MenuItem item) {
 		currentFragment.setShowDetails(showDetails);
 
-		String menuItemText = "";
-		if (showDetails) {
-			menuItemText = getString(R.string.hide_details);
-		} else {
-			menuItemText = getString(R.string.show_details);
-		}
-		item.setTitle(menuItemText);
+		item.setTitle(showDetails ? R.string.hide_details : R.string.show_details);
 	}
 
 	public ScriptActivityFragment getFragment(int fragmentPosition) {
@@ -457,6 +456,7 @@ public class ScriptActivity extends BaseActivity {
 	}
 
 	public void setCurrentFragment(int fragmentPosition) {
+
 		switch (fragmentPosition) {
 			case FRAGMENT_SCRIPTS:
 				currentFragment = scriptFragment;

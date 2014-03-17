@@ -58,7 +58,9 @@ import org.catrobat.catroid.formulaeditor.Formula;
 import org.catrobat.catroid.formulaeditor.FormulaEditorEditText;
 import org.catrobat.catroid.formulaeditor.FormulaElement;
 import org.catrobat.catroid.formulaeditor.InternFormulaParser;
+import org.catrobat.catroid.ui.BottomBar;
 import org.catrobat.catroid.ui.ScriptActivity;
+import org.catrobat.catroid.ui.dialogs.CustomAlertDialogBuilder;
 import org.catrobat.catroid.ui.dialogs.FormulaEditorComputeDialog;
 
 public class FormulaEditorFragment extends SherlockFragment implements OnKeyListener,
@@ -83,12 +85,11 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 	private LinearLayout formulaEditorKeyboard;
 	private ImageButton formularEditorFieldDeleteButton;
 	private LinearLayout formulaEditorBrick;
+	private Toast toast;
 	private View brickView;
 	private long[] confirmSwitchEditTextTimeStamp = { 0, 0 };
 	private int confirmSwitchEditTextCounter = 0;
 	private CharSequence previousActionBarTitle;
-
-	private Toast formularEditorToast;
 
 	public boolean restoreInstance = false;
 	private View fragmentView;
@@ -110,7 +111,7 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		previousActionBarTitle = ProjectManager.getInstance().getCurrentSprite().getName();
 		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(getString(R.string.formula_editor_title));
+		actionBar.setTitle(R.string.formula_editor_title);
 	}
 
 	private void resetActionBar() {
@@ -139,12 +140,12 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 			fragTransaction.add(R.id.script_fragment_container, formulaEditorFragment, FORMULA_EDITOR_FRAGMENT_TAG);
 			fragTransaction.hide(fragmentManager.findFragmentByTag(ScriptFragment.TAG));
 			fragTransaction.show(formulaEditorFragment);
-			activity.findViewById(R.id.bottom_bar).setVisibility(View.GONE);
+			BottomBar.hideBottomBar(activity);
 		} else if (formulaEditorFragment.isHidden()) {
 			formulaEditorFragment.updateBrickViewAndFormula(brick, formula);
 			fragTransaction.hide(fragmentManager.findFragmentByTag(ScriptFragment.TAG));
 			fragTransaction.show(formulaEditorFragment);
-			activity.findViewById(R.id.bottom_bar).setVisibility(View.GONE);
+			BottomBar.hideBottomBar(activity);
 		} else {
 			formulaEditorFragment.setInputFormula(formula, SET_FORMULA_ON_SWITCH_EDIT_TEXT);
 		}
@@ -187,9 +188,8 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 
 		resetActionBar();
 
-		activity.findViewById(R.id.bottom_bar).setVisibility(View.VISIBLE);
-		activity.findViewById(R.id.bottom_bar_separator).setVisibility(View.VISIBLE);
-		activity.findViewById(R.id.button_play).setVisibility(View.VISIBLE);
+		BottomBar.showBottomBar(activity);
+		BottomBar.showPlayButton(activity);
 
 	}
 
@@ -408,20 +408,17 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 
 	}
 
-	private void showToast(int ressourceId) {
-		if (formularEditorToast != null) {
-			View toastView = formularEditorToast.getView();
-			if (toastView != null) {
-				formularEditorToast.setText(getString(ressourceId));
-				if (!toastView.isShown()) {
-					formularEditorToast.show();
-				}
-				return;
-			}
+	/*
+	 * TODO Remove Toasts from this class and replace them with something useful
+	 * This is a hack more than anything else. We shouldn't use Toasts if we're going to change the message all the time
+	 */
+	private void showToast(int resourceId) {
+		if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+			toast = Toast.makeText(getActivity().getApplicationContext(), resourceId, Toast.LENGTH_SHORT);
+		} else {
+			toast.setText(resourceId);
 		}
-		formularEditorToast = Toast.makeText(context, getString(ressourceId), Toast.LENGTH_LONG);
-		formularEditorToast.show();
-
+		toast.show();
 	}
 
 	@Override
@@ -430,7 +427,7 @@ public class FormulaEditorFragment extends SherlockFragment implements OnKeyList
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BACK:
 				if (formulaEditorEditText.hasChanges()) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
 					builder.setTitle(R.string.formula_editor_discard_changes_dialog_title)
 							.setMessage(R.string.formula_editor_discard_changes_dialog_message)
 							.setNegativeButton(R.string.no, new OnClickListener() {

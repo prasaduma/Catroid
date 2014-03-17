@@ -32,10 +32,10 @@
     <string name="copy">Copy</string>
     <string name="cut">Cut</string>
     <string name="move">Move</string>
-    <!--  -->
-
-
-    <!-- General -->
+    <string name="backpack">Backpack</string>
+    <string name="unpacking">Unpacking</string>
+    <string name="unpack">Unpack it</string>
+    <string name="copy_addition">copy</string>
     <string name="close">Close</string>
     <string name="error">Error</string>
     <string name="please_wait">Please wait</string>
@@ -43,6 +43,7 @@
     <string name="background">Background</string>
     <string name="stage">Stage</string>
     <string name="ok">OK</string>
+    <string name="settings">Settings</string>
     <!--  -->
 
 
@@ -50,11 +51,13 @@
     <string name="main_menu_new">New</string>
     <string name="main_menu_continue">Continue</string>
     <string name="main_menu_programs">Programs</string>
-    <string name="main_menu_forum">Discuss</string>
+    <string name="main_menu_help">Help</string>
     <string name="main_menu_web">Explore</string>
     <string name="main_menu_upload">Upload</string>
-    <string name="main_menu_settings">Settings</string>
     <string name="main_menu_about_pocketcode">About Pocket Code</string>
+    
+    <string name="main_menu_terms_of_use">Terms of use</string>
+ 
     <string name="main_menu_rate_app">Rate us!</string>
     <string name="main_menu_play_store_not_installed">Play Store app not found</string>
     <string name="main_menu_web_dialog_title">Caution!</string>
@@ -70,14 +73,36 @@
     <!--  -->
 
 
+    <!-- New Object Dialog -->
+    <string name="dialog_new_object_look_header">with Look from…</string>
+    <string name="dialog_new_object_pocketpaint">Pocket Paint</string>
+    <string name="dialog_new_object_gallery">Gallery</string>
+    <string name="dialog_new_object_camera">Camera</string>
+    <string name="dialog_new_object_look_preview">look preview</string>
+    <string name="dialog_new_object_name">Object name</string>
+    <string name="dialog_new_object_switch_title">New Object created</string>
+    <string name="dialog_new_object_switch_message">Switch to new Object?</string>
+    <!--  -->
+
+
+    <!-- Terms of Use Dialog -->
+    <string name="dialog_terms_of_use_title">Terms of Use</string>
+    <string name="dialog_terms_of_use_info">In order to 
+    be allowed to use Pocket Code and other executables offered by the Catrobat project, you 
+    must agree to our Terms of Use and strictly follow them when you use Pocket 
+    Code and our other executables. Please see the link below for their precise formulation.\n</string>
+    <string name="dialog_terms_of_use_link_text">Terms of Use</string>
+    <!--  -->
+
+
     <!-- About Dialog -->
     <string name="dialog_about_title">About Pocket Code</string>
     <string name="dialog_about_license_info">Pocket Code is a programming 
         environment and interpreter for Android devices for the visual 
         programming language Catrobat.\n\n
-        Pocket Code is mainly licensed under the GNU AGPL v3 License. 
+        The source code of Pocket Code is mainly licensed under the GNU AGPL v3 License. 
         For the precise details of the license see the link below.\n</string>
-    <string name="dialog_about_pocketcode_license_link_text">Pocket Code License</string>
+    <string name="dialog_about_pocketcode_license_link_text">Pocket Code Source Code License</string>
     <string name="dialog_about_catrobat_link_text">About Catrobat</string>
     <!--  -->
 
@@ -92,13 +117,13 @@
     <string name="show_details">Show Details</string>
     <string name="hide_details">Hide Details</string>
     <string name="insert_below">Insert Below</string>
-    <string name="edit_in_pocket_paint">Edit in Pocket Paint</string>
     <string name="sprite">Object</string>
     <string name="sprites">Objects</string>
     <string name="spritelist_background_headline">Background</string>
     <string name="dialog_confirm_delete_object_title">Delete this object?</string>
     <string name="dialog_confirm_delete_multiple_objects_title">Delete these objects?</string>
     <string name="dialog_confirm_delete_object_message">This can not be undone!</string>
+    <string name="select_all">Select all</string>
     <!--  -->
 
 
@@ -125,6 +150,15 @@
     <string name="dialog_confirm_delete_script_title">Delete this script?</string>
     <string name="dialog_confirm_delete_multiple_bricks_title">Delete these bricks?</string>
     <string name="dialog_confirm_delete_brick_message">This can not be undone!</string>
+
+    <plurals name="number_of_bricks_to_delete">
+        <item quantity="one">Delete 1 Brick</item>
+        <item quantity="other">Delete %d Bricks</item>
+    </plurals>
+    <plurals name="number_of_bricks_to_copy">
+        <item quantity="one">Copy 1 Brick</item>
+        <item quantity="other">Copy %d Bricks</item>
+    </plurals>
     <!--  -->
 
 
@@ -133,8 +167,8 @@
     <string name="fragment_background_text_description">Click \"+\" to add Backgrounds</string>
     <string name="rename_look_dialog">Rename Look</string>
     <string name="lookname_invalid">This look\'s name is invalid</string>
-    <string name="copy_look_addition">copy</string>
-    <string name="pocket_paint_not_installed">Pocket Paint is not installed!\nDo you want to install it?</string>
+    <string name="pocket_paint_not_installed_title">Pocket Paint is not installed!</string>
+    <string name="pocket_paint_not_installed">Do you want to install it?</string>
     <string name="default_look_name">look</string>
     <string name="delete_look_dialog">Delete look?</string>
     <string name="select_look_from_gallery">Select image</string>
@@ -143,15 +177,17 @@
     <string name="dialog_confirm_delete_look_title">Delete this look?</string>
     <string name="dialog_confirm_delete_multiple_looks_title">Delete these looks?</string>
     <string name="dialog_confirm_delete_look_message">This can not be undone!</string>
+    <string name="lookname">look name:</string>
     <!--  -->
 
 
     <!-- Sound fragment -->
     <string name="fragment_sound_text_description">Click \"+\" to add Sounds</string>
     <string name="rename_sound_dialog">Rename Sound</string>
+    <string name="backpack_title">BackPack</string>
     <string name="soundname_invalid">This sound\'s name is invalid</string>
     <string name="sound_play">play</string>
-    <string name="sound_pause">pause</string>
+    <string name="sound_stop">stop</string>
     <string name="sound_select_source">Select a sound</string>
     <string name="sound_time_seperator">/</string>
     <string name="delete_sound_dialog">Delete sound?</string>
@@ -159,8 +195,13 @@
     <string name="dialog_confirm_delete_sound_title">Delete this sound?</string>
     <string name="dialog_confirm_delete_multiple_sounds_title">Delete these sounds?</string>
     <string name="dialog_confirm_delete_sound_message">This can not be undone!</string>
+    <string name="sound_name">sound name:</string>
     <!--  -->
 
+    <plurals name="unpacking_items_plural">
+        <item quantity="one">was unpacked!</item>
+        <item quantity="other">were unpacked!</item>
+    </plurals>
 
     <!-- My Projects activity -->
     <string name="last_used">Last access:</string>
@@ -175,6 +216,7 @@
     <string name="dialog_confirm_delete_program_message">This can not be undone!</string>
     <string name="details_date_today">Today</string>
     <string name="details_date_yesterday">Yesterday</string>
+    <string name="dialog_copy_project_title">Copy program</string>
     <!--  -->
 
 
@@ -182,17 +224,12 @@
     <string name="soundrecorder_name">Pocket Code Recorder</string>
     <string name="soundrecorder_error">Sound recording failed</string>
     <string name="soundrecorder_recorded_filename">record</string>
-    <string name="soundrecorder_text_view">Press icon below to start and stop recording.</string>
+    <string name="soundrecorder_text_view">Press icon above to start and stop recording.</string>
     <!--  -->
 
 
     <!-- PreStage activity -->
     <string name="text_to_speech_engine_not_installed">Text-to-Speech engine not installed!\nDo you want to install it?</string>
-    <!--  -->
-
-
-    <!-- Look context menu -->
-    <string name="look_context_menu_edit_in_pocket_paint">Edit in Pocket Paint</string>
     <!--  -->
 
 
@@ -225,10 +262,11 @@
 
     <!-- New sprite dialog -->
     <string name="new_sprite_dialog_default_sprite_name">My Object</string>
-    <string name="new_sprite_dialog_title">Name of new Object</string>
+    <string name="new_sprite_dialog_title">New Object</string>
     <string name="spritename_already_exists">This object name already exists</string>
     <string name="rename_sprite_dialog">Rename Object</string>
     <string name="spritename_invalid">This object name is invalid</string>
+    <string name="sprite_name">Object name:</string>
     <!--  -->
 
 
@@ -265,12 +303,8 @@
 
     <!-- Broadcast spinner -->
     <string name="new_broadcast_message">New…</string>
-    <!--  -->
-
-
-    <!-- Brick general -->
-    <string name="brick_single">Brick</string>
-    <string name="brick_multiple">Bricks</string>
+    <string name="dialog_new_broadcast_message_title">New message</string>
+    <string name="dialog_new_broadcast_message_name">message:</string>
     <!--  -->
 
 
@@ -344,6 +378,8 @@
     <string name="brick_change_volume_by">Change volume by</string>
     <string name="brick_speak">Speak</string>
     <string name="brick_speak_default_value">"Hello!"</string>
+    <string name="dialog_edit_speak_title">Edit Text</string>
+    <string name="dialog_edit_speak_text">Speak:</string>
     <!--  -->
 
 
@@ -363,6 +399,8 @@
     <string name="brick_note">Note</string>
     <string name="brick_forever">Forever</string>
     <string name="brick_repeat">Repeat</string>
+    <string name="dialog_edit_note_title">Edit note</string>
+    <string name="dialog_edit_note_text">Note:</string>
 
     <plurals name="time_plural">
         <item quantity="one">time</item>
@@ -388,7 +426,8 @@
     <!-- defaultValues -->
     <string name="default_project_name">My first program</string>
     <string name="default_project_sprites_mole_name">Mole</string>
-    <string name="default_project_sprites_mole_whacked">Whacked mole</string>
+    <string name="default_project_sprites_mole_moving">Moving Mole</string>
+    <string name="default_project_sprites_mole_whacked">Whacked Mole</string>
     <string name="default_project_sprites_mole_sound">Hit</string>
     <string name="default_project_backgroundname">Background</string>
     <string name="default_project_var_random_from">random from</string>
@@ -400,25 +439,19 @@
     <string name="notification_invalid_text_entered">Please enter a value</string>
     <string name="notification_screenshot_ok">Screenshot saved</string>
     <string name="notification_download_project_cancel">Canceled downloading program</string>
-    
     <string name="notification_copy_title_pending">"Copying "</string>
     <string name="notification_copy_pending">Copy in progress</string>
     <string name="notification_copy_finished">Copy completed</string>
-
     <string name="notification_upload_title_pending">"Uploading "</string>
     <string name="notification_upload_title_finished">"Look at "</string>
     <string name="notification_upload_pending">Upload in progress</string>
     <string name="notification_upload_finished">Upload successful</string>
-    
     <string name="notification_download_title_pending">"Downloading "</string>
     <string name="notification_download_pending">Download in progress</string>
     <string name="notification_download_finished">Download successful</string>
-    
     <string name="notification_title_open">"Open "</string>
-    
     <string name="project_rename">(Your program will be renamed.)</string>
     <string name="size_of_project">Size:</string>
-    
     <string name="upload_button">Upload</string>
     <string name="upload_project_dialog_title">Upload program</string>
     <string name="upload_description">Description:</string>
@@ -439,6 +472,7 @@
     <string name="error_load_sound">An error occurred while loading the sound.</string>
     <string name="error_internet_connection">An unknown error occurred. Check your Internet connection.</string>
     <string name="error_project_compatability">The program is not compatible with this version of Pocket Code.</string>
+    <string name="error_outdated_pocketcode_version">The Pocket Code version is too old. Update now?</string>
     <string name="error_copy_project">An error occurred while copying the program.</string>
     <string name="error_upload_project_with_default_name">You cannot upload a program with the name \'My first program\'. Please rename the program.</string>
     <string name="error_upload_default_project">You cannot upload this program because it is the same as \'My first program\'. Please modify it, and try again.</string>
@@ -558,7 +592,8 @@
     <string name="formula_editor_variable_dialog_hint">Enter variable name</string>
     <string name="formula_editor_discard_changes_dialog_message">Do you want to save your changes?</string>
     <string name="formula_editor_discard_changes_dialog_title">Save changes?</string>
-    
+    <string name="variable_name">variable name:</string>
+
     <plurals name="formula_editor_variable_context_action_item_selected">
         <item quantity="one">Variable selected!</item>
         <item quantity="other">Variables selected!</item>

@@ -36,10 +36,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -60,6 +61,7 @@ import org.catrobat.catroid.ui.ScriptActivity;
 import org.catrobat.catroid.ui.adapter.UserVariableAdapter;
 import org.catrobat.catroid.ui.dialogs.NewVariableDialog;
 import org.catrobat.catroid.ui.dialogs.NewVariableDialog.NewVariableDialogListener;
+import org.catrobat.catroid.utils.Utils;
 
 public class FormulaEditorVariableListFragment extends SherlockListFragment implements Dialog.OnKeyListener,
 		UserVariableAdapter.OnCheckedChangeListener, UserVariableAdapter.OnListItemClickListener,
@@ -72,6 +74,7 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 
 	private String actionBarTitle;
 	private ActionMode contextActionMode;
+	private View selectAllActionModeButton;
 	private boolean inContextMode;
 	private int deleteIndex;
 	private UserVariableAdapter adapter;
@@ -144,15 +147,23 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 
 	@Override
 	public void onCheckedChange() {
-		if (inContextMode) {
-			String title = adapter.getAmountOfCheckedItems()
-					+ " "
-					+ getActivity().getResources().getQuantityString(
-							R.plurals.formula_editor_variable_context_action_item_selected,
-							adapter.getAmountOfCheckedItems());
-
-			contextActionMode.setTitle(title);
+		if (!inContextMode) {
+			return;
 		}
+
+		updateActionModeTitle();
+		Utils.setSelectAllActionModeButtonVisibility(selectAllActionModeButton,
+				adapter.getCount() > 0 && adapter.getAmountOfCheckedItems() != adapter.getCount());
+	}
+
+	private void updateActionModeTitle() {
+		String title = adapter.getAmountOfCheckedItems()
+				+ " "
+				+ getActivity().getResources().getQuantityString(
+						R.plurals.formula_editor_variable_context_action_item_selected,
+						adapter.getAmountOfCheckedItems());
+
+		contextActionMode.setTitle(title);
 	}
 
 	@Override
@@ -181,8 +192,8 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 		super.onStart();
 	}
 
-	public void setAddButtonListener(SherlockFragmentActivity sherlokActivity) {
-		LinearLayout buttonAdd = (LinearLayout) sherlokActivity.findViewById(R.id.button_add);
+	public void setAddButtonListener(SherlockFragmentActivity sherlockActivity) {
+		ImageButton buttonAdd = (ImageButton) sherlockActivity.findViewById(R.id.button_add);
 		buttonAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -237,11 +248,9 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 				.findFragmentByTag(FormulaEditorFragment.FORMULA_EDITOR_FRAGMENT_TAG);
 		fragTransaction.hide(formulaEditorFragment);
 
-		activity.findViewById(R.id.bottom_bar).setVisibility(View.VISIBLE);
-		activity.findViewById(R.id.bottom_bar_separator).setVisibility(View.GONE);
-		activity.findViewById(R.id.button_play).setVisibility(View.GONE);
+		BottomBar.showBottomBar(activity);
+		BottomBar.hidePlayButton(activity);
 
-		BottomBar.enableButtons(activity);
 		fragTransaction.show(this);
 		fragTransaction.commit();
 
@@ -283,6 +292,21 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 		return false;
 	}
 
+	private void addSelectAllActionModeButton(ActionMode mode, Menu menu) {
+		selectAllActionModeButton = Utils.addSelectAllActionModeButton(getLayoutInflater(null), mode, menu);
+		selectAllActionModeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				for (int position = 0; position < adapter.getCount(); position++) {
+					adapter.addCheckedItem(position);
+				}
+				adapter.notifyDataSetChanged();
+				onCheckedChange();
+			}
+		});
+	}
+
 	private ActionMode.Callback contextModeCallback = new ActionMode.Callback() {
 
 		@Override
@@ -293,6 +317,7 @@ public class FormulaEditorVariableListFragment extends SherlockListFragment impl
 					+ getActivity().getResources().getQuantityString(
 							R.plurals.formula_editor_variable_context_action_item_selected, 0));
 			getSherlockActivity().findViewById(R.id.bottom_bar).setVisibility(View.GONE);
+			addSelectAllActionModeButton(mode, menu);
 			return true;
 		}
 
