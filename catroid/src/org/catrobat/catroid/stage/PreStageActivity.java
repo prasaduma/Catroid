@@ -25,14 +25,19 @@ package org.catrobat.catroid.stage;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -44,11 +49,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.parrot.freeflight.receivers.DroneAvailabilityDelegate;
+import com.parrot.freeflight.receivers.DroneAvailabilityReceiver;
 import com.parrot.freeflight.receivers.DroneConnectionChangeReceiverDelegate;
 import com.parrot.freeflight.receivers.DroneConnectionChangedReceiver;
 import com.parrot.freeflight.receivers.DroneReadyReceiver;
 import com.parrot.freeflight.receivers.DroneReadyReceiverDelegate;
 import com.parrot.freeflight.service.DroneControlService;
+import com.parrot.freeflight.service.intents.DroneStateManager;
+import com.parrot.freeflight.tasks.CheckDroneNetworkAvailabilityTask;
 
 import org.catrobat.catroid.ProjectManager;
 import org.catrobat.catroid.R;
@@ -68,7 +77,7 @@ import java.util.Locale;
 
 @SuppressWarnings("deprecation")
 public class PreStageActivity extends Activity implements DroneReadyReceiverDelegate,
-		DroneConnectionChangeReceiverDelegate
+		DroneConnectionChangeReceiverDelegate, DroneAvailabilityDelegate
 //implements DroneReadyReceiverDelegate, DroneFlyingStateReceiverDelegate,
 {
 	private static final String TAG = PreStageActivity.class.getSimpleName();
@@ -88,6 +97,10 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 
 	private DroneControlService droneControlService = null;
 	private BroadcastReceiver droneReadyReceiver = null;
+	private BroadcastReceiver droneStateReceiver = null;
+
+	private CheckDroneNetworkAvailabilityTask checkDroneConnectionTask;
+
 	//	private DroneFlyingStateReceiver droneFlyingStateReceiver;
 
 	private boolean autoConnect = false;
@@ -132,6 +145,11 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 
 		if ((requiredResources & Brick.ARDRONE_SUPPORT) > 0) {
 			Log.d(TAG, "Adding drone support!");
+
+			droneReadyReceiver = new DroneReadyReceiver(this);
+			droneStateReceiver = new DroneAvailabilityReceiver(this);
+			droneConnectionChangeReceiver = new DroneConnectionChangedReceiver(this);
+
 			Intent startService = new Intent(this, DroneControlService.class);
 
 			Object obj = startService(startService);
@@ -142,10 +160,6 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 			if (obj == null || !isSuccessful) {
 				Toast.makeText(this, "Connection to the drone failed!", Toast.LENGTH_LONG).show();
 				resourceFailed();
-			} else {
-				droneReadyReceiver = new DroneReadyReceiver(this);
-				droneConnectionChangeReceiver = new DroneConnectionChangedReceiver(this);
-
 			}
 		}
 
@@ -165,7 +179,30 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		manager.registerReceiver(droneReadyReceiver, new IntentFilter(DroneControlService.DRONE_STATE_READY_ACTION));
 		manager.registerReceiver(droneConnectionChangeReceiver, new IntentFilter(
 				DroneControlService.DRONE_CONNECTION_CHANGED_ACTION));
+		manager.registerReceiver(droneStateReceiver, new IntentFilter(DroneStateManager.ACTION_DRONE_STATE_CHANGED));
+		checkDroneConnectivity();
+	}
 
+	@SuppressLint("NewApi")
+	private void checkDroneConnectivity() {
+		if (checkDroneConnectionTask != null && checkDroneConnectionTask.getStatus() != Status.FINISHED) {
+			checkDroneConnectionTask.cancel(true);
+		}
+
+		checkDroneConnectionTask = new CheckDroneNetworkAvailabilityTask() {
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				onDroneAvailabilityChanged(result);
+			}
+
+		};
+
+		if (Build.VERSION.SDK_INT >= 11) {
+			checkDroneConnectionTask.executeOnExecutor(CheckDroneNetworkAvailabilityTask.THREAD_POOL_EXECUTOR, this);
+		} else {
+			checkDroneConnectionTask.execute(this);
+		}
 	}
 
 	@Override
@@ -179,6 +216,23 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getApplicationContext());
 		manager.unregisterReceiver(droneReadyReceiver);
 		manager.unregisterReceiver(droneConnectionChangeReceiver);
+		manager.unregisterReceiver(droneStateReceiver);
+
+		if (taskRunning(checkDroneConnectionTask)) {
+			checkDroneConnectionTask.cancelAnyFtpOperation();
+		}
+	}
+
+	private boolean taskRunning(AsyncTask<?, ?, ?> checkMediaTask2) {
+		if (checkMediaTask2 == null) {
+			return false;
+		}
+
+		if (checkMediaTask2.getStatus() == Status.FINISHED) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -434,13 +488,40 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 	@Override
 	public void onDroneConnected() {
 		// We still waiting for onDroneReady event
-		Log.d(TAG, "onDroneConnected");
+		Log.d(TAG, "onDroneConnected, requesting Config update and wait for drone ready.");
 		droneControlService.requestConfigUpdate();
 	}
 
 	@Override
 	public void onDroneDisconnected() {
-
 		//nothing to do
+	}
+
+	@Override
+	public void onDroneAvailabilityChanged(boolean isDroneOnNetwork) {
+		// Here we know that the drone is on the network
+		Log.d(TAG, "Drone availability  = " + isDroneOnNetwork);
+		if (isDroneOnNetwork) {
+			//TODO: connect, set config, init video, ...
+		} else {
+			showErrorDialogWhenDroneIsNotAvailable(this);
+		}
+
+	}
+
+	public static void showErrorDialogWhenDroneIsNotAvailable(final PreStageActivity context) {
+		Builder builder = new CustomAlertDialogBuilder(context);
+
+		builder.setTitle(R.string.error);
+		builder.setCancelable(false);
+		builder.setMessage(R.string.error_no_drone_connected);
+		builder.setNeutralButton(R.string.close, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//TODO: shut down nicely all resources and go back to the activity we came from
+				context.resourceFailed();
+			}
+		});
+		builder.show();
 	}
 }

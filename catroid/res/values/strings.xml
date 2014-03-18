@@ -486,6 +486,8 @@
     <string name="error_copy_project">An error occurred while copying the program.</string>
     <string name="error_upload_project_with_default_name">You cannot upload a program with the name \'My first program\'. Please rename the program.</string>
     <string name="error_upload_default_project">You cannot upload this program because it is the same as \'My first program\'. Please modify it, and try again.</string>
+    <string name="error_no_drone_connected">You need a wifi connection with the ARDrone 2.0 to run this program. Please connect your wifi to the hotspot.</string>
+    
     <!--  -->
 
 
