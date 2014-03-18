@@ -51,8 +51,11 @@ import android.widget.Toast;
 
 import com.parrot.freeflight.receivers.DroneAvailabilityDelegate;
 import com.parrot.freeflight.receivers.DroneAvailabilityReceiver;
+import com.parrot.freeflight.receivers.DroneBatteryChangedReceiver;
+import com.parrot.freeflight.receivers.DroneBatteryChangedReceiverDelegate;
 import com.parrot.freeflight.receivers.DroneConnectionChangeReceiverDelegate;
 import com.parrot.freeflight.receivers.DroneConnectionChangedReceiver;
+import com.parrot.freeflight.receivers.DroneEmergencyChangeReceiver;
 import com.parrot.freeflight.receivers.DroneReadyReceiver;
 import com.parrot.freeflight.receivers.DroneReadyReceiverDelegate;
 import com.parrot.freeflight.service.DroneControlService;
@@ -78,8 +81,8 @@ import java.util.Locale;
 @SuppressWarnings("deprecation")
 public class PreStageActivity extends Activity implements DroneReadyReceiverDelegate,
 		DroneConnectionChangeReceiverDelegate, DroneAvailabilityDelegate
-//implements DroneReadyReceiverDelegate, DroneFlyingStateReceiverDelegate,
-{
+		//implements DroneReadyReceiverDelegate, DroneFlyingStateReceiverDelegate,
+		, DroneBatteryChangedReceiverDelegate {
 	private static final String TAG = PreStageActivity.class.getSimpleName();
 
 	private static final int REQUEST_ENABLE_BLUETOOTH = 2000;
@@ -108,6 +111,10 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 	private Intent intent = null;
 
 	private DroneConnectionChangedReceiver droneConnectionChangeReceiver;
+	private DroneEmergencyChangeReceiver droneEmergencyReceiver;
+	private DroneBatteryChangedReceiver droneBatteryReceiver;
+
+	private int droneBatteryStatus = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -148,6 +155,7 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 
 			droneReadyReceiver = new DroneReadyReceiver(this);
 			droneStateReceiver = new DroneAvailabilityReceiver(this);
+			droneBatteryReceiver = new DroneBatteryChangedReceiver(this);
 			droneConnectionChangeReceiver = new DroneConnectionChangedReceiver(this);
 
 			Intent startService = new Intent(this, DroneControlService.class);
@@ -176,11 +184,14 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		}
 
 		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(getApplicationContext());
+		manager.registerReceiver(droneBatteryReceiver, new IntentFilter(
+				DroneControlService.DRONE_BATTERY_CHANGED_ACTION));
 		manager.registerReceiver(droneReadyReceiver, new IntentFilter(DroneControlService.DRONE_STATE_READY_ACTION));
 		manager.registerReceiver(droneConnectionChangeReceiver, new IntentFilter(
 				DroneControlService.DRONE_CONNECTION_CHANGED_ACTION));
 		manager.registerReceiver(droneStateReceiver, new IntentFilter(DroneStateManager.ACTION_DRONE_STATE_CHANGED));
 		checkDroneConnectivity();
+
 	}
 
 	@SuppressLint("NewApi")
@@ -217,6 +228,7 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		manager.unregisterReceiver(droneReadyReceiver);
 		manager.unregisterReceiver(droneConnectionChangeReceiver);
 		manager.unregisterReceiver(droneStateReceiver);
+		manager.unregisterReceiver(droneBatteryReceiver);
 
 		if (taskRunning(checkDroneConnectionTask)) {
 			checkDroneConnectionTask.cancelAnyFtpOperation();
@@ -477,7 +489,12 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 
 	@Override
 	public void onDroneReady() {
-		Log.d(TAG, "onDroneReady -> go to stage");
+		Log.d(TAG, "onDroneReady -> check battery -> go to stage");
+		//droneControlService.
+		if (droneBatteryStatus < 20) {
+			showErrorDialogWhenDroneIsNotAvailable(this, R.string.error_drone_low_battery);
+			return;
+		}
 		intent.putExtra(STRING_EXTRA_INIT_DRONE, true);
 		intent.putExtra("USE_SOFTWARE_RENDERING", false); //TODO: Drone: Hand over to Stage Activity
 		intent.putExtra("FORCE_COMBINED_CONTROL_MODE", false); //TODO: Drone: Hand over to Stage Activity
@@ -488,6 +505,7 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 	@Override
 	public void onDroneConnected() {
 		// We still waiting for onDroneReady event
+
 		Log.d(TAG, "onDroneConnected, requesting Config update and wait for drone ready.");
 		droneControlService.requestConfigUpdate();
 	}
@@ -504,17 +522,17 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		if (isDroneOnNetwork) {
 			//TODO: connect, set config, init video, ...
 		} else {
-			showErrorDialogWhenDroneIsNotAvailable(this);
+			showErrorDialogWhenDroneIsNotAvailable(this, R.string.error_no_drone_connected);
 		}
 
 	}
 
-	public static void showErrorDialogWhenDroneIsNotAvailable(final PreStageActivity context) {
+	public static void showErrorDialogWhenDroneIsNotAvailable(final PreStageActivity context, int errorMessage) {
 		Builder builder = new CustomAlertDialogBuilder(context);
 
 		builder.setTitle(R.string.error);
 		builder.setCancelable(false);
-		builder.setMessage(R.string.error_no_drone_connected);
+		builder.setMessage(errorMessage);
 		builder.setNeutralButton(R.string.close, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -523,5 +541,12 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 			}
 		});
 		builder.show();
+	}
+
+	@Override
+	public void onDroneBatteryChanged(int value) {
+		Log.d(TAG, "Drone Battery Status =" + Integer.toString(value));
+		droneBatteryStatus = value;
+
 	}
 }
