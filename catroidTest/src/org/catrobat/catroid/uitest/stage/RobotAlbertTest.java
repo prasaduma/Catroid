@@ -262,14 +262,11 @@ public class RobotAlbertTest extends BaseActivityInstrumentationTestCase<MainMen
 		for (i = 0; i < length; i++) {
 			boolean found = false;
 
-			if (i < length - 51) {
-				if ((buffer.toByteArray()[i] == (byte) 0xAA) && (buffer.toByteArray()[i + 1] == (byte) 0x55)
-						&& (buffer.toByteArray()[i + 2] == (byte) 52)) {
-					if ((buffer.toByteArray()[i + 50] == (byte) 0x0D) && (buffer.toByteArray()[i + 51] == (byte) 0x0A)) {
-						i = i + 51;
-						found = true;
-					}
-				}
+			if (i < length - 51 && buffer.toByteArray()[i] == (byte) 0xAA && buffer.toByteArray()[i + 1] == (byte) 0x55
+					&& buffer.toByteArray()[i + 2] == (byte) 52 && buffer.toByteArray()[i + 50] == (byte) 0x0D
+					&& buffer.toByteArray()[i + 51] == (byte) 0x0A) {
+				i = i + 51;
+				found = true;
 			}
 
 			if (found == false) {

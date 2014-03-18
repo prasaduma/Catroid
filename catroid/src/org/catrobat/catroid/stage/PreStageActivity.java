@@ -132,13 +132,14 @@ public class PreStageActivity extends Activity {
 			bluetoothDeviceWaitingText = waitingText;
 			int bluetoothState = bluetoothManager.activateBluetooth(title, waitingText);
 			if (bluetoothState == BluetoothManager.BLUETOOTH_NOT_SUPPORTED) {
-				Log.d("PreStageActivity", "Bluetooth not supported");
+				Log.e(TAG, "Bluetooth not supported");
 				Toast.makeText(PreStageActivity.this, R.string.notification_blueth_err, Toast.LENGTH_LONG).show();
 				resourceFailed();
 			} else if (bluetoothState == BluetoothManager.BLUETOOTH_ALREADY_ON) {
-				Log.d("PrestageActivity", "Bluetooth already on");
+				Log.d(TAG, "Bluetooth already on");
 				robotAlbertActive = true;
 				if (robotAlbert == null) {
+					Log.d(TAG, "Starting Albert BT");
 					startBluetoothCommunication(true, title, waitingText);
 				} else {
 					resourceInitialized();
@@ -227,7 +228,7 @@ public class PreStageActivity extends Activity {
 	}
 
 	private void startBluetoothCommunication(boolean autoConnect, String title, String waitingText) {
-		Log.d("PreStageActivity", "startBluetoothCommunication with custom Title");
+		Log.d(TAG, "startBluetoothCommunication with custom Title");
 		connectingProgressDialog = ProgressDialog.show(this, "", waitingText, true);
 		Intent serverIntent = new Intent(this, DeviceListActivity.class);
 		serverIntent.putExtra(DeviceListActivity.AUTO_CONNECT, autoConnect);
@@ -412,7 +413,7 @@ public class PreStageActivity extends Activity {
 						connectingProgressDialog.dismiss();
 						resourceInitialized();
 						break;
-					case RobotAlbertBtCommunicator.STATE_CONNECTERROR:
+					case RobotAlbertBtCommunicator.STATE_CONNECT_ERROR:
 						Toast.makeText(PreStageActivity.this, R.string.bt_connection_failed, Toast.LENGTH_SHORT).show();
 						connectingProgressDialog.dismiss();
 						if (robotAlbert != null) {
