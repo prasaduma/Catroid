@@ -31,6 +31,7 @@ import org.catrobat.catroid.content.Script;
 import org.catrobat.catroid.content.Sprite;
 import org.catrobat.catroid.content.StartScript;
 import org.catrobat.catroid.content.WhenScript;
+import org.catrobat.catroid.content.bricks.DroneTakeOffBrick;
 import org.catrobat.catroid.content.bricks.ForeverBrick;
 import org.catrobat.catroid.content.bricks.GlideToBrick;
 import org.catrobat.catroid.content.bricks.HideBrick;
@@ -77,11 +78,66 @@ public final class StandardProjectHandler {
 
 	public static Project createAndSaveStandardDroneProject(String projectName, Context context) throws IOException,
 			IllegalArgumentException {
+		if (StorageHandler.getInstance().projectExists(projectName)) {
+			throw new IllegalArgumentException("Project with name '" + projectName + "' already exists!");
+		}
+
+		String backgroundName = context.getString(R.string.default_project_backgroundname);
+		String spriteTakeOffName = context.getString(R.string.default_drone_project_sprites_takeoff);
+		String takeOffLookName = context.getString(R.string.default_drone_project_sprites_takeoff) + " arrow";
+
 		Project defaultDroneProject = new Project(context, projectName);
+		defaultDroneProject.setDeviceData(context); // density anywhere here
 		StorageHandler.getInstance().saveProject(defaultDroneProject);
 		ProjectManager.getInstance().setProject(defaultDroneProject);
 
-		//TODO: Create the Project here
+		backgroundImageScaleFactor = ImageEditing.calculateScaleFactorToScreenSize(
+				R.drawable.default_project_background, context);
+
+		File backgroundFile = UtilFile.copyImageFromResourceIntoProject(projectName, backgroundName
+				+ Constants.IMAGE_STANDARD_EXTENTION, R.drawable.default_project_background, context, true,
+				backgroundImageScaleFactor);
+
+		File takeOffArrowFile = UtilFile.copyImageFromResourceIntoProject(projectName, spriteTakeOffName
+				+ Constants.IMAGE_STANDARD_EXTENTION, R.drawable.default_drone_project_drone_go_top_orange, context,
+				true, backgroundImageScaleFactor);
+
+		LookData backgroundLookData = new LookData();
+		backgroundLookData.setLookName(backgroundName);
+		backgroundLookData.setLookFilename(backgroundFile.getName());
+
+		Sprite backgroundSprite = defaultDroneProject.getSpriteList().get(0);
+
+		// Background sprite
+		backgroundSprite.getLookDataList().add(backgroundLookData);
+		Script backgroundStartScript = new StartScript(backgroundSprite);
+
+		SetLookBrick setLookBrick = new SetLookBrick(backgroundSprite);
+		setLookBrick.setLook(backgroundLookData);
+		backgroundStartScript.addBrick(setLookBrick);
+
+		backgroundSprite.addScript(backgroundStartScript);
+
+		//takeoff and land sprite
+		Sprite spriteTakeOffSprite = new Sprite(spriteTakeOffName);
+
+		defaultDroneProject.addSprite(spriteTakeOffSprite);
+
+		//scripts for takeoff
+		Script droneTakeOffScript = new WhenScript(spriteTakeOffSprite);
+		DroneTakeOffBrick takeOffBrick = new DroneTakeOffBrick(spriteTakeOffSprite);
+		droneTakeOffScript.addBrick(takeOffBrick);
+
+		//looks for takeoff
+		LookData takeOffLookData = new LookData();
+		takeOffLookData.setLookName(takeOffLookName);
+		takeOffLookData.setLookFilename(takeOffArrowFile.getName());
+
+		spriteTakeOffSprite.getLookDataList().add(takeOffLookData);
+		//TODO: Create more sophisticated drone program
+
+		spriteTakeOffSprite.addScript(droneTakeOffScript);
+		StorageHandler.getInstance().saveProject(defaultDroneProject);
 
 		return defaultDroneProject;
 	}

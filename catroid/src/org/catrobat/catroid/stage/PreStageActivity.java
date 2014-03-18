@@ -427,17 +427,20 @@ public class PreStageActivity extends Activity implements DroneReadyReceiverDele
 		intent.putExtra(STRING_EXTRA_INIT_DRONE, true);
 		intent.putExtra("USE_SOFTWARE_RENDERING", false); //TODO: Drone: Hand over to Stage Activity
 		intent.putExtra("FORCE_COMBINED_CONTROL_MODE", false); //TODO: Drone: Hand over to Stage Activity
+		//
 		resourceInitialized();
 	}
 
 	@Override
 	public void onDroneConnected() {
 		// We still waiting for onDroneReady event
+		Log.d(TAG, "onDroneConnected");
 		droneControlService.requestConfigUpdate();
 	}
 
 	@Override
 	public void onDroneDisconnected() {
+
 		//nothing to do
 	}
 }

@@ -426,7 +426,6 @@
 
     <!-- defaultValues -->
     <string name="default_project_name">My first program</string>
-    <string name="default_drone_project_name">Drone test program</string>  
     <string name="default_project_sprites_mole_name">Mole</string>
     <string name="default_project_sprites_mole_moving">Moving Mole</string>
     <string name="default_project_sprites_mole_whacked">Whacked Mole</string>
@@ -434,6 +433,15 @@
     <string name="default_project_backgroundname">Background</string>
     <string name="default_project_var_random_from">random from</string>
     <string name="default_project_var_random_to">random to</string>
+    
+    <!-- defaultdroneValues -->
+    <string name="default_drone_project_name">My first Drone program</string>  
+    <string name="default_drone_project_sprites_takeoff">Take off</string>
+    <string name="default_drone_project_srpites_land">Land</string>
+    <string name="default_drone_project_srpites_"></string>
+    
+    <string name="default_drone_project_backgroundname">Background</string>
+    
     <!--  -->
 
 
