@@ -57,7 +57,7 @@ public class NewLookDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_new_look, null);
+		View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_new_object, null);
 		setupPaintroidButton(dialogView);
 		setupGalleryButton(dialogView);
 		setupCameraButton(dialogView);
@@ -76,7 +76,7 @@ public class NewLookDialog extends DialogFragment {
 	}
 
 	private void setupPaintroidButton(View parentView) {
-		View paintroidButton = parentView.findViewById(R.id.dialog_new_look_paintroid);
+		View paintroidButton = parentView.findViewById(R.id.dialog_new_object_paintroid);
 
 		final Intent intent = new Intent("android.intent.action.MAIN");
 		intent.setComponent(new ComponentName(Constants.POCKET_PAINT_PACKAGE_NAME,
@@ -94,7 +94,7 @@ public class NewLookDialog extends DialogFragment {
 	}
 
 	private void setupGalleryButton(View parentView) {
-		View galleryButton = parentView.findViewById(R.id.dialog_new_look_gallery);
+		View galleryButton = parentView.findViewById(R.id.dialog_new_object_gallery);
 
 		galleryButton.setOnClickListener(new View.OnClickListener() {
 
@@ -107,7 +107,7 @@ public class NewLookDialog extends DialogFragment {
 	}
 
 	private void setupCameraButton(View parentView) {
-		View cameraButton = parentView.findViewById(R.id.dialog_new_look_camera);
+		View cameraButton = parentView.findViewById(R.id.dialog_new_object_camera);
 
 		cameraButton.setOnClickListener(new View.OnClickListener() {
 
