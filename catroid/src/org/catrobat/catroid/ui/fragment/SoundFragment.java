@@ -186,20 +186,16 @@ public class SoundFragment extends ScriptActivityFragment implements SoundBaseAd
 	public void onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.copy).setVisible(true);
 
-		boolean visibility = false;
-		if (BuildConfig.DEBUG) {
-			visibility = true;
-		}
-		menu.findItem(R.id.backpack).setVisible(visibility);
-		menu.findItem(R.id.cut).setVisible(false);
-
-		if (BackPackListManager.getInstance().getSoundInfoArrayList().size() > 0) {
-			menu.findItem(R.id.unpacking).setVisible(true);
-		} else {
+		if (!BuildConfig.FEATURE_BACKPACK_ENABLED) {
+			menu.findItem(R.id.backpack).setVisible(false);
 			menu.findItem(R.id.unpacking).setVisible(false);
-
+		}
+		else if (!(BackPackListManager.getInstance().getSoundInfoArrayList().size() > 0)) {
+			menu.findItem(R.id.unpacking).setVisible(false);
 			StorageHandler.getInstance().clearBackPackSoundDirectory();
 		}
+
+		menu.findItem(R.id.cut).setVisible(false);
 
 		super.onPrepareOptionsMenu(menu);
 	}
@@ -482,7 +478,7 @@ public class SoundFragment extends ScriptActivityFragment implements SoundBaseAd
 		menu.findItem(R.id.context_menu_copy).setVisible(true);
 		menu.findItem(R.id.context_menu_unpacking).setVisible(false);
 		//TODO: remove this when inserting of sound items from backpack is possible
-		if (!BuildConfig.DEBUG) {
+		if (!BuildConfig.FEATURE_BACKPACK_ENABLED) {
 			menu.findItem(R.id.context_menu_backpack).setVisible(false);
 		}
 	}
