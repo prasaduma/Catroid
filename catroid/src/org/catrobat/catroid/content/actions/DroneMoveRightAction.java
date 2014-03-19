@@ -25,6 +25,7 @@ package org.catrobat.catroid.content.actions;
 import android.util.Log;
 
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
+import com.parrot.freeflight.service.DroneControlService;
 
 import org.catrobat.catroid.content.Sprite;
 import org.catrobat.catroid.drone.DroneServiceWrapper;
@@ -53,6 +54,9 @@ public class DroneMoveRightAction extends TemporalAction {
 	@Override
 	protected void update(float percent) {
 		Log.d(TAG, "update!");
+		DroneServiceWrapper.getInstance().getDroneService().setProgressiveCommandEnabled(true);
+		DroneServiceWrapper.getInstance().getDroneService().setProgressiveCommandCombinedYawEnabled(true);
+		DroneServiceWrapper.getInstance().getDroneService().moveRight(DroneControlService.POWER);
 	}
 
 	// TODO: complete the method
@@ -60,8 +64,15 @@ public class DroneMoveRightAction extends TemporalAction {
 	public boolean act(float delta) {
 		Boolean superReturn = super.act(delta);
 		Log.d(TAG, "Do Drone Stuff once, superReturn = " + superReturn.toString());
-		DroneServiceWrapper.getInstance().getDroneService().moveRight(duration.interpretFloat(sprite));
 		return superReturn;
+	}
+
+	@Override
+	protected void end() {
+		super.end();
+		DroneServiceWrapper.getInstance().getDroneService().setProgressiveCommandEnabled(false);
+		DroneServiceWrapper.getInstance().getDroneService().setProgressiveCommandCombinedYawEnabled(false);
+		DroneServiceWrapper.getInstance().getDroneService().moveRight(0);
 	}
 
 }

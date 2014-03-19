@@ -25,6 +25,7 @@ package org.catrobat.catroid.content.actions;
 import android.util.Log;
 
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
+import com.parrot.freeflight.service.DroneControlService;
 
 import org.catrobat.catroid.content.Sprite;
 import org.catrobat.catroid.drone.DroneServiceWrapper;
@@ -53,6 +54,7 @@ public class DroneMoveDownAction extends TemporalAction {
 	@Override
 	protected void update(float percent) {
 		Log.d(TAG, "update!");
+		DroneServiceWrapper.getInstance().getDroneService().moveDown(DroneControlService.POWER);
 	}
 
 	// TODO: complete the method
@@ -60,8 +62,14 @@ public class DroneMoveDownAction extends TemporalAction {
 	public boolean act(float delta) {
 		Boolean superReturn = super.act(delta);
 		Log.d(TAG, "Do Drone Stuff once, superReturn = " + superReturn.toString());
-		DroneServiceWrapper.getInstance().getDroneService().moveDown(duration.interpretFloat(sprite));
 		return superReturn;
+	}
+
+	@Override
+	protected void end() {
+		super.end();
+		Log.d(TAG, "end!");
+		DroneServiceWrapper.getInstance().getDroneService().moveDown(0);
 	}
 
 }
